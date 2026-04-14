@@ -1,0 +1,103 @@
+/* CSS Styles */
+@font-face {
+  font-family: 'Headings';
+  src: url('/static/core/fonts/Newsreader-Regular.ttf');
+}
+
+* {
+  background-color: white !important;
+  box-sizing: border-box;
+  color: black !important;
+  font-family: 'Default', 'Times New Roman', serif;
+}
+.text-bg-dark {
+  background-color: white !important;
+  color: black !important;
+}
+/* Hidden Objects */
+.navbar, .sidebar, .syllabus, video, iframe, #core-loader, .backdrop, .modal, .offcanvas {
+  display: none !important;
+}
+.print-warning {
+  position: relative;
+}
+.print-warning .alert {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, 50%);
+  width: 50%;
+}
+
+/* Page Box Styles */
+@page {
+  size: 8.5in 11in portrait;
+  margin: 0.5in;
+}
+
+/* Typography Styles */
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Headings', 'Times New Roman', serif;
+  font-weight: bold;
+}
+h1 {
+  font-size: 28pt;
+  line-height: 30pt;
+  margin: 0.3in 0in 0.2in 0in;
+}
+h2, h3, h4, h5, h6, p {
+  margin: 0.1in 0in 0.1in 0in;
+}
+h2 { font-size: 24pt; }
+h3 { font-size: 20pt; }
+h4 { font-size: 18pt; }
+h5 { font-size: 16pt; }
+h6 { font-size: 14pt; }
+p { font-size: 12pt; }
+
+/* List Styles */
+ul {
+  list-style-type: disc;
+}
+img {
+  width: 100%;
+}
+
+/* Hypertext Styles */
+a:link, a:visited {
+  color: rgb(0, 0, 0);
+  text-decoration: none;
+}
+a::after {
+  content: " (" attr(href) ") ";
+  font-weight: bold;
+  word-wrap: break-word;
+}
+
+/* Page Break Styles */
+section, img, ol, ul {
+  page-break-inside: avoid;
+}
+p {
+  orphans: 3;
+  widows: 3;
+}
+
+/* Table Styles */
+table {
+  border-collapse: collapse;
+  margin: 0in 0.25in;
+  page-break-inside: avoid;
+}
+table thead, table tr {
+  page-break-inside: avoid;
+}
+table th,
+table td {
+  border: 1pt solid rgb(0, 0, 0);
+  padding: 0.05in;
+  text-align: left;
+  vertical-align: top;
+}
+.table { display: table !important; }
+.table.mobile { display: none !important; }

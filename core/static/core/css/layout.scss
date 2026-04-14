@@ -1,0 +1,86 @@
+.syllabus {
+  display: grid;
+  grid-template-areas:
+            "toc"
+            "header"
+            "content";
+  grid-template-rows: auto auto 1fr;
+  grid-template-columns: 1fr;
+  height: 100vh;
+}
+.syllabus-header {
+  grid-area: header;
+}
+.syllabus-toc {
+  grid-area: toc;
+  left: 4rem;
+  overflow-y: auto;
+  position: fixed;
+  right: 0;
+  top: 0;
+  z-index: 50;
+}
+.syllabus-toc-close {
+    position: absolute;
+    left: -1.5rem;
+  }
+.syllabus-toc .pad-s-3 { padding-left: 1rem !important; }
+.syllabus-toc .pad-s-4 { padding-left: 2rem !important; }
+.syllabus-toc .pad-s-5 { padding-left: 3rem !important; }
+.syllabus-toc .pad-s-6 { padding-left: 4rem !important; }
+.syllabus-content {
+  grid-area: content;
+  scroll-behavior: smooth;
+}
+.h3-border-dark { border-left: 1rem solid rgba(16, 20, 25, 1) !important; }
+.h4-border-dark { border-left: 2rem solid rgba(16, 20, 25, 1) !important; }
+.h5-border-dark { border-left: 3rem solid rgba(16, 20, 25, 1) !important; }
+.h6-border-dark { border-left: 4rem solid rgba(16, 20, 25, 1) !important; }
+.print-warning { display: none; }
+
+/* Medium devices (tablets, 768x and up) */
+@media (max-width: 768px) {
+  .syllabus-content .d-flex .table {
+    max-width: 20rem;
+  }
+}
+
+/* Large devices (tablets, 992x and up) */
+@media (min-width: 992px) {
+  html { scroll-padding-top: auto; }
+  .syllabus {
+    display: grid;
+    grid-template-areas:
+            "header toc"
+            "content toc";
+    grid-template-rows: auto 1fr;
+    grid-template-columns: 4fr 2fr;
+    height: 100vh;
+    scroll-padding-top: auto;
+  }
+  .syllabus-header {
+    height: 12.5rem;
+    margin-top: auto;
+    overflow: hidden;
+    position: -webkit-sticky;
+    position: sticky;
+    top: 0;
+    z-index: 50;
+  }
+  .syllabus-toc {
+    height: 100vh;
+    position: static;
+  }
+  .syllabus-content {
+    align-items: flex-start;
+    scroll-padding-top: 2rem;
+  }
+}
+/* Extra Large devices (desktops, 1200px and up) */
+@media (min-width: 1200px) {
+
+}
+/* Extra Extra Large devices (desktops, 1400px and up) */
+@media (min-width: 1400px) {
+
+}
