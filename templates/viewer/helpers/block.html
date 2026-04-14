@@ -1,0 +1,46 @@
+{% load core_extras viewer_extras %}
+{% has_attr bond.block.printableblock 'contentblock' as is_content_block %}
+{% has_attr bond.block.printableblock 'detailsblock' as is_details_block %}
+{% has_attr bond.block.printableblock 'fileblock' as is_file_block %}
+{% has_attr bond.block.printableblock 'gradedeterminationblock' as is_gradedetermination_block %}
+{% has_attr bond.block.printableblock 'listblock' as is_list_block %}
+{% has_attr bond.block.printableblock 'scheduleblock' as is_schedule_block %}
+{% has_attr bond.block.printableblock 'tableblock' as is_table_block %}
+{% has_attr bond.block.printableblock 'videoblock' as is_video_block %}
+{% if is_content_block %}
+    {% if bond.block.printableblock.contentblock.image %}
+        {% if bond.block.printableblock.contentblock.image_position == 'Before Content' %}
+            <img src="{{ MEDIA_URL }}{{ bond.block.printableblock.contentblock.image }}" alt="" class="max-width-100" />
+        {% endif %}
+    {% endif %}
+    {% if bond.block.printableblock.contentblock.content %}
+        {{ bond.block.printableblock.contentblock.content|safe }}
+    {% endif %}
+    {% if bond.block.printableblock.contentblock.image %}
+        {% if bond.block.printableblock.contentblock.image_position == 'After Content' %}
+            <img src="{{ MEDIA_URL }}{{ bond.block.printableblock.contentblock.image }}" alt="" class="max-width-100" />
+        {% endif %}
+    {% endif %}
+{% elif is_details_block %}
+    {% get_details bond.block.printableblock.detailsblock render_mode master_syllabus.id bond.segment.id %}
+{% elif is_file_block %}
+    {% if bond.block.printableblock.fileblock.description %}<p>{{ bond.block.printableblock.fileblock.description|safe }}</p>{% endif %}
+    <a href="https://{{ request.META.HTTP_HOST }}{{ MEDIA_URL }}{{ bond.block.printableblock.fileblock.file }}"
+       target="_blank" class="btn btn-secondary d-flex align-items-center">
+        <span class="d-flex align-items-center">{% include 'core/helpers/icon.html' with icon='file-earmark' size='1.5rem' %}</span>
+        <span class="ps-3">File Attachment</span>
+    </a>
+{% elif is_gradedetermination_block %}
+    {% get_grade_determination bond.block.printableblock.gradedeterminationblock render_mode %}
+{% elif is_list_block %}
+   {% get_list bond.block.printableblock.listblock render_mode %}
+{% elif is_schedule_block %}
+    {% get_schedule bond.block.printableblock.scheduleblock.schedule term render_mode master_syllabus_id=master_syllabus.id segment_id=bond.segment.id block_id=bond.block.id %}
+{% elif is_table_block %}
+    {% get_table bond.block.printableblock.tableblock render_mode master_syllabus.id bond.segment.id bond.block.id %}
+{% elif is_video_block %}
+    {% if render_mode != 'viewer' %}
+        <div class="youtube">{{ bond.block.printableblock.videoblock.embed_code|safe }}</div>
+    {% endif %}
+    {{ bond.block.printableblock.videoblock.content_verbose|safe }}
+{% endif %}

@@ -1,0 +1,37 @@
+{% extends 'core/base.html' %}
+{% load static core_extras viewer_extras %}
+{% block title %}{{ title }}{% endblock %}
+
+{% block css %}
+    <link rel="stylesheet" type="text/css" href="{% static 'viewer/css/print.scss' %}" media="print">
+{% endblock %}
+
+{% block main %}
+    <!-- Container -->
+    <article>
+        <section>
+            <h1>{{ title }}</h1>
+            <h2>{{ branding.institution }}</h2>
+        </section>
+        <section>
+            <h3>Instructor Information</h3>
+            <ul>
+                {% include 'editor/profile/instructor.html' with office_hours=master_syllabus.office_hours print=True show_all=True %}
+            </ul>
+        </section>
+        {% if visible or user|has_group:'admins' or user|has_group:'instructors' %}
+            {% for master_bond in master_bonds %}
+                {% get_bonds master_bond section as bonds %}
+                {% include 'viewer/print/blocks.html' %}
+            {% empty %}
+                {% include 'viewer/print/blocks.html' %}
+            {% endfor %}
+        {% endif %}
+    </article>
+    <!-- END Container -->
+
+    <script type="text/javascript">
+        window.onafterprint = window.close;
+        window.print();
+    </script>
+{% endblock %}

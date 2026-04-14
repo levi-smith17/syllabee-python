@@ -1,0 +1,36 @@
+{% load viewer_extras %}
+{{ question.text|safe }}
+<ul class="d-grid gap-1 list-unstyled mt-3 p-0">
+    <li>
+        <input class="check-response btn-check" type="radio" name="responses" id="response-{{ question.id }}-true"
+               value="True" required data-form-id="{{ form_id }}"
+                {% if show_answer and question.truefalsequestion.correct_response or attempt and attempt.answer == 'True' %} checked{% endif %}
+                {% if show_answer or attempt %} disabled{% endif %}>
+        <label class="btn btn-lg btn-outline-secondary d-flex align-items-center"
+               for="response-{{ question.id }}-true" id="response-{{ question.id }}-true-label">
+            <span class="unchecked{% if show_answer and question.truefalsequestion.correct_response or attempt and attempt.answer == 'True' %} d-none{% else %} d-flex{% endif %} align-items-center">
+                {% include 'core/helpers/icon.html' with icon='circle' size='1.5rem' %}
+            </span>
+            <span class="checked{% if show_answer and question.truefalsequestion.correct_response or attempt and attempt.answer == 'True' %} d-flex{% else %} d-none{% endif %} align-items-center text-info">
+                    {% include 'core/helpers/icon.html' with icon='record-circle' size='1.5rem' %}
+                </span>
+            <span class="flex-fill ps-3 text-start">True</span>
+        </label>
+    </li>
+    <li>
+        <input class="check-response btn-check" type="radio" name="responses" id="response-{{ question.id }}-false"
+               value="False" required data-form-id="{{ form_id }}"
+                {% if show_answer and not question.truefalsequestion.correct_response or attempt and attempt.answer == 'False' %} checked{% endif %}
+                {% if show_answer or attempt %} disabled{% endif %}>
+        <label class="btn btn-lg btn-outline-secondary d-flex align-items-center"
+               for="response-{{ question.id }}-false" id="response-{{ question.id }}-false-label">
+            <span class="unchecked{% if show_answer and not question.truefalsequestion.correct_response or attempt and attempt.answer == 'False' %} d-none{% else %} d-flex{% endif %} align-items-center">
+                {% include 'core/helpers/icon.html' with icon='circle' size='1.5rem' %}
+            </span>
+            <span class="checked{% if show_answer and not question.truefalsequestion.correct_response or attempt and attempt.answer == 'False' %} d-flex{% else %} d-none{% endif %} align-items-center text-info">
+                    {% include 'core/helpers/icon.html' with icon='record-circle' size='1.5rem' %}
+                </span>
+            <span class="flex-fill ps-3 text-start">False</span>
+        </label>
+    </li>
+</ul>

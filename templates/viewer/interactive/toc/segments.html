@@ -1,0 +1,15 @@
+{% load viewer_extras %}
+{% include 'viewer/interactive/toc/options.html' %}
+{% if visible or user == section.instructor %}
+    {% for master_bond_progress in master_bond_progresses %}
+        {% get_bond_progresses master_bond_progress section view as bond_progresses %}
+        {% include 'viewer/interactive/toc/blocks.html' %}
+        <li><hr></li>
+    {% endfor %}
+{% endif %}
+<li class="d-none d-lg-block">
+    <button type="button" class="scroll-top btn btn-dark text-white d-flex align-items-center w-100"
+            data-target=".syllabus-toc">
+        {% include 'core/buttons/content.html' with icon='arrow-up' icon_color='' text='Back to Top' text_css='ps-3' size='1.5rem' %}
+    </button>
+</li>

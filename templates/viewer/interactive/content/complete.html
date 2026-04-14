@@ -1,0 +1,17 @@
+{% load core_extras json_loaders viewer_extras %}
+<div class="d-grid align-content-start gap-3">
+    {% if visible or section.instructor == user %}
+        <div id="stage_post" data-content="{% get_json_content 'complete' '{"section_hash": "'|addstr:section.hash|addstr:'"}' %}"></div>
+        {% if not visible %}
+            <div class="px-3">{% include 'viewer/messages/unavailable_instructor.html' %}</div>
+        {% endif %}
+        {% if section.instructor != user %}<div class="px-3">{% include 'viewer/messages/complete_student.html' %}</div>{% endif %}
+        {% for master_bond_progress in master_bond_progresses %}
+            <div id="content-container-{{ master_bond_progress.master_bond.segment.id }}"
+                 class="{% if forloop.first %}content-container-first d-grid{% else %}content-containers d-none{% endif %} gap-3 px-3{% if forloop.last %} pb-3{% endif %}"
+                 data-name="{{ master_bond_progress.master_bond.segment.name }}"></div>
+        {% endfor %}
+    {% else %}
+        <div class="px-3 mt-3">{% include 'viewer/messages/unavailable_student.html' %}</div>
+    {% endif %}
+</div>

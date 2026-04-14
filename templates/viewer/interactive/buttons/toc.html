@@ -1,0 +1,19 @@
+{% load core_extras json_loaders %}
+{% has_attr bond_progress.bond.block 'printableblock' as is_printable_block %}
+<button type="button" class="load-regions btn btn-dark text-start d-flex align-items-center py-2 pad-s-{% if is_printable_block %}{{ bond_progress.bond.block.printableblock.print_heading }}{% else %}3{% endif %} w-100"
+        data-content="{% get_json_content 'interactive_block' '{"section_hash": "'|addstr:section.hash|addstr:'", "bond_progress_id": "'|addstr:bond_progress.id|addstr:'"}' %}"
+        {% if not bond_progress.start_time or master_syllabus.prohibit_backtracking %} disabled{% endif %}>
+    <span class="d-flex align-items-center">
+        {% if bond_progress.start_time %}
+            {% include 'viewer/helpers/icon.html' with block=bond_progress.bond.block %}
+        {% else %}
+            {% include 'core/helpers/icon.html' with icon='lock' size='1.5rem' %}
+        {% endif %}
+    </span>
+    <span class="flex-fill text-start ps-3 position-relative">{{ bond_progress.bond.block.name }}</span>
+    {% if bond_progress.completed %}
+        <span class="d-flex align-items-center text-success">
+            {% include 'core/helpers/icon.html' with icon='check-lg' size='1.5rem' %}
+        </span>
+    {% endif %}
+</button>

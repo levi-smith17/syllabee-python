@@ -1,0 +1,94 @@
+{% load core_extras json_loaders viewer_extras %}
+<div class="input-group flex-nowrap text-bg-secondary border-0 rounded-0 position-sticky top-14px z-25">
+    {% if items %}
+        {% if limit_start == 0 %}{% define False as perm %}{% else %}{% define True as perm %}{% endif %}
+    {% else %}
+        {% define False as perm %}
+    {% endif %}
+    {% url 'viewer:search:pagination' 'first' as url %}
+    {% include 'core/buttons/load.html' with btn_color='secondary btn-pagination p-2 p-md-3 rounded-0' icon='chevron-double-left' target='#content-container' title='First Page' %}
+    {% url 'viewer:search:pagination' 'previous' as url %}
+    {% include 'core/buttons/load.html' with btn_color='secondary btn-pagination p-2 p-md-3' icon='chevron-left' target='#content-container' title='Previous Page' %}
+    <span class="input-group-text d-flex align-item-center border-0 text-bg-secondary p-2 p-md-3">
+                    {% include 'core/helpers/icon.html' with icon='search' size='1.5rem' %}
+                </span>
+    <div class="form-floating m-0">
+        <input type="text" class="search form-control text-bg-secondary border-0"
+               placeholder="Search Syllabi" aria-label="Search Syllabi" id="search-syllabi-input"
+               data-target="#content-container" data-url="{% url 'viewer:search:syllabi' %}"
+               value="{% if pattern %}{{ pattern }}{% endif %}">
+        <label for="search-syllabi-input">Search Syllabi</label>
+    </div>
+    <button class="search-clear btn btn-outline-danger d-flex align-items-center border-0 p-2 p-md-3 text-light"
+            type="button" data-field="#search-syllabi-input" data-target="#content-container"
+            data-url="{% url 'viewer:search:clear' %}"
+            title="Clear Field">
+        {% include 'core/helpers/icon.html' with icon='x-lg' size='1.5rem' %}
+    </button>
+    <button type="button" class="filter-offcanvas btn btn-secondary border-0 p-2 p-md-3" id="filter" title="Filter Syllabi"
+            data-url="{% url 'viewer:search:filter' %}" aria-controls="offcanvas-generic">
+        {% include 'core/buttons/content.html' with icon='filter' icon_color='' text='' text_css='' size='1.5rem' %}
+    </button>
+    {% url 'viewer:search:pagination' 'next' as url %}
+    {% if items %}
+        {% if limit_end >= count %}{% define False as perm %}{% else %}{% define True as perm %}{% endif %}
+    {% else %}
+        {% define False as perm %}
+    {% endif %}
+    {% include 'core/buttons/load.html' with btn_color='secondary btn-pagination p-2 p-md-3 rounded-0' icon='chevron-right' target='#content-container' title='Next Page' %}
+</div>
+<div id="search-syllabi-results-list" class="p-3">
+    {% if not user|has_group:'admins' and not user|has_group:'instructors' %}
+        {% include 'core/helpers/alert.html' with alert_css='' icon='' text='<strong>WARNING</strong>: some search/filter results may be omitted if they apply to the current term. Please contact your instructor with questions or concerns.' text_css='' type='warning' %}
+    {% endif %}
+    {% if pattern or filters %}
+        <div class="d-flex align-items-center justify-content-between me-1">
+            <p>{{ count }} Result{{ count|plural }}</p>
+            <p>Page {{ page }} of {{ total_pages }}</p>
+        </div>
+        <ul class="d-grid align-items-start align-content-start gap-1 overflow-y-auto list-unstyled pe-2">
+            {% if filters %}
+                {% include 'viewer/search/filter_badges.html' %}
+            {% endif %}
+            {% for master_section in items %}
+                {% ifchanged master_section.section.term %}
+                    {% if not forloop.first %}<li><hr></li>{% endif %}
+                    <li><h5 class="m-0 p-1">{{ master_section.section.term.name }}{% if master_section.section.term.archived %} (ARCHIVED){% endif %}</h5></li>
+                {% endifchanged %}
+                <li>
+                    {% if master_section.section.hash and master_section.master_bond.master_syllabus.interactive_view %}
+                        {% get_syll_title master_section.section as json_title %}
+                        {% get_json_profile '{"instructor_id": "'|addstr:master_section.section.instructor.id|addstr:'"}' as json_profile %}
+                        {% url 'viewer:interactive:syllabus' master_section.section.hash as json_url %}
+                        {% if master_section.section.term.end_date|before_today or master_section.section.instructor == user %}
+                            {% define 'journal-text' as icon %}
+                            {% get_json_stage 'complete' '{"section_hash": "'|addstr:master_section.section.hash|addstr:'"}' as json_stage %}
+                            {% get_json_toc 'complete' '{"section_hash": "'|addstr:master_section.section.hash|addstr:'"}' as json_toc %}
+                            {% include 'core/buttons/load_regions.html' with btn_color='dark w-100' icon_color='' json_content=False perms=True post_icon=False text=master_section.section.course.course_code|addstr:'-'|addstr:master_section.section.section_code|addstr:' - '|addstr:master_section.section.course.name|addstr:' ('|addstr:master_section.section.instructor|addstr:')' text_css='ps-3' title='View Syllabus' size='1.5rem' %}
+                        {% else %}
+                            {% define 'journal-richtext' as icon %}
+                            {% get_json_stage 'toc' '{"section_hash": "'|addstr:master_section.section.hash|addstr:'"}' as json_stage %}
+                            {% get_json_content 'interactive' '{"section_hash": "'|addstr:master_section.section.hash|addstr:'"}' as json_content %}
+                            {% include 'core/buttons/load_regions.html' with btn_color='dark w-100' icon_color='' json_toc=False perms=True post_icon=False text=master_section.section.course.course_code|addstr:'-'|addstr:master_section.section.section_code|addstr:' - '|addstr:master_section.section.course.name|addstr:' ('|addstr:master_section.section.instructor|addstr:')' text_css='ps-3' title='View Syllabus' size='1.5rem' %}
+                        {% endif %}
+                    {% else %}
+                        <a href="{% url 'viewer:traditional:syllabus' master_section.section.course.course_code|lower master_section.section.section_code|lower master_section.section.term.term_code|lower %}"
+                           target="_blank" class="btn btn-dark d-flex align-items-center">
+                            {% if master_section.section.term.archived %}
+                                <span class="d-flex align-items-center text-warning" title="Archived">{% include 'core/helpers/icon.html' with icon='archive' size='1.5rem' %}</span>
+                            {% else %}
+                                <span class="d-flex align-items-center">{% include 'core/helpers/icon.html' with icon='journal-text' size='1.5rem' %}</span>
+                            {% endif %}
+                            <span class="flex-fill ps-3 text-start">{{ master_section.section.course.course_code }}-{{ master_section.section.section_code }} - {{ master_section.section.course.name }} ({{ master_section.section.instructor }})</span>
+                            <span class="d-flex align-items-center" title="Opens in a New Tab">{% include 'core/helpers/icon.html' with icon='box-arrow-up-right' size='1.5rem' %}</span>
+                        </a>
+                    {% endif %}
+                </li>
+            {% empty %}
+                {% include 'core/helpers/alert.html' with alert_css='m-0' icon='info-square' text='<strong>NOTE</strong>: no results match your current search or filters.' text_css='ps-3' type='info' %}
+            {% endfor %}
+        </ul>
+    {% else %}
+        {% include 'core/helpers/alert.html' with alert_css='' icon='info-square' text='<strong>NOTE</strong>: use the search box or filter button above to retrieve a syllabus.' text_css='ps-3' type='info' %}
+    {% endif %}
+</div>

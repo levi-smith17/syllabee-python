@@ -1,0 +1,12 @@
+{% if response_correct or bond_progress.completed %}
+    {% include 'viewer/interactive/buttons/next.html' with next_text='Next' %}
+{% elif attempts_remaining > 0 %}
+    <div class="p-0 border-0 d-flex">
+        <button type="submit" class="check-form-submit btn btn-secondary flex-fill d-flex align-items-center rounded-0">
+            <span class="flex-fill text-end pe-3">Check</span>
+            <span class="d-flex align-items-center">{% include 'core/helpers/icon.html' with icon='check-lg' size='2rem' %}</span>
+        </button>
+    </div>
+{% else %}
+    {% include 'viewer/interactive/buttons/next.html' with next_text='Next' %}
+{% endif %}

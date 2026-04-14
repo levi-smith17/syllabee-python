@@ -1,0 +1,52 @@
+{% load core_extras viewer_extras %}
+{% for bond_progress in bond_progresses %}
+    {% ifchanged bond_progress.bond.segment.name %}
+        <li>
+            {% if view == 'complete' %}
+                <button class="scroll-to btn btn-dark text-white d-flex align-items-center f-fam-headings fw-bold fs-5 text-start w-100 mb-2{% if not forloop.first %} mt-2{% endif %} pad-s-{{ bond_progress.bond.segment.print_heading }}"
+                        type="button" data-scroll-to="#segment-{{ bond_progress.bond.segment.name|lower_snake }}">
+                    {{ bond_progress.bond.segment.name }}
+                </button>
+            {% else %}
+                <button type="button" class="btn btn-dark text-white text-start f-fam-headings fw-bold fs-5{% if not forloop.first %} mt-2{% endif %} pad-s-{{ bond_progress.bond.segment.print_heading }} opacity-100"
+                        disabled>
+                    {{ bond_progress.bond.segment.name }}
+                </button>
+            {% endif %}
+        </li>
+    {% endifchanged %}
+    {% if view == 'complete' %}
+        {% get_addendum master_syllabus bond_progress.bond.block as addendum %}
+        {% has_attr bond_progress.bond.block 'printableblock' as is_printable_block %}
+        {% if is_printable_block %}
+            {% if bond_progress.bond.block.printableblock.print_group %}
+                {% regroup bond_progresses by bond.block.printableblock.print_group as grouped_bond_progresses %}
+                {% for grouped_bond_progress in grouped_bond_progresses %}
+                    {% if grouped_bond_progress.grouper and bond_progress.id == grouped_bond_progress.list.0.id %}
+                        <li>
+                            <button class="scroll-to btn btn-dark text-white d-flex align-items-center w-100 pad-s-{{ grouped_bond_progress.list.0.bond.block.printableblock.print_heading }}"
+                                    type="button" data-scroll-to="#{{ grouped_bond_progress.grouper|lower_snake }}">
+                                <span class="d-flex align-items-center">{% include 'viewer/helpers/icon.html' with block=grouped_bond_progress.list.0.bond.block %}</span>
+                                <span class="flex-fill text-start ps-3">{{ grouped_bond_progress.grouper }}</span>
+                                {% if addendum %}{% include 'viewer/addendum/icon.html' %}{% endif %}
+                            </button>
+                        </li>
+                    {% endif %}
+                {% endfor %}
+            {% else %}
+                <li>
+                    <button class="scroll-to btn btn-dark text-white text-start d-flex align-items-center w-100 pad-s-{{ bond_progress.bond.block.printableblock.print_heading }}"
+                            type="button" data-scroll-to="#{{ bond_progress.bond.block.name|lower_snake }}">
+                        <span class="d-flex align-items-center">{% include 'viewer/helpers/icon.html' with block=bond_progress.bond.block %}</span>
+                        <span class="flex-fill text-start ps-3">{{ bond_progress.bond.block.name }}</span>
+                        {% if addendum %}{% include 'viewer/addendum/icon.html' %}{% endif %}
+                    </button>
+                </li>
+            {% endif %}
+        {% endif %}
+    {% else %}
+        <li id="syllabus-toc-{{ bond_progress.id }}">
+            {% include 'viewer/interactive/buttons/toc.html' %}
+        </li>
+    {% endif %}
+{% endfor %}

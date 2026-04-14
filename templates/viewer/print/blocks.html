@@ -1,0 +1,26 @@
+{% load core_extras %}
+{% for bond in bonds %}
+    {% if bond.block.printableblock.print_group %}
+        {% regroup bonds by block.printableblock.print_group as grouped_bonds %}
+        {% for grouped_bond in grouped_bonds %}
+            {% if grouped_bond.grouper and bond.id == grouped_bond.list.0.id %}
+                <section>
+                    <h{{ grouped_bond.list.0.block.printableblock.print_heading }}>
+                        {{ grouped_bond.grouper }}
+                    </h{{ grouped_bond.list.0.block.printableblock.print_heading }}>
+                    {% for nested_bond in grouped_bond.list %}
+                        {% include 'viewer/helpers/block.html' with bond=nested_bond render_mode='print' %}
+                    {% endfor %}
+                </section>
+            {% endif %}
+        {% endfor %}
+    {% else %}
+        {% has_attr bond.block.printableblock 'fileblock' as is_file_block %}
+        {% if not is_file_block %}
+            <section>
+                <h{{ bond.block.printableblock.print_heading }}>{{ bond.block.name }}</h{{ bond.block.printableblock.print_heading }}>
+                {% include 'viewer/helpers/block.html' with render_mode='print' %}
+            </section>
+        {% endif %}
+    {% endif %}
+{% endfor %}

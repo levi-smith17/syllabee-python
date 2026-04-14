@@ -1,0 +1,12 @@
+<div class="d-flex align-items-center">
+    <div class="d-flex align-items-center cursor-default fw-bold h-2r px-2 text-bg-warning">{{ progress_percentage }}%</div>
+    <div class="progress bg-dark border border-warning rounded-0 h-2r w-100" role="progressbar"
+         aria-label="Syllabus Progress" aria-valuenow="{{ progress_percentage }}" aria-valuemin="0" aria-valuemax="100"
+         title="{{ progress_percentage }}% Complete!">
+        <div class="progress-bar progress-bar-striped bg-warning" style="width: {{ progress_percentage }}%"></div>
+    </div>
+    <div class="d-flex align-items-center cursor-default fw-bold h-2r px-2 text-bg-warning text-nowrap"
+         title="Your Total Points for this Activity">
+        Points: {{ total_points }}
+    </div>
+</div>

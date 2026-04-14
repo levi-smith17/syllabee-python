@@ -1,0 +1,10 @@
+<div class="p-0 border-0 d-flex">
+    <button type="button" class="interactive-load btn btn-secondary flex-fill d-flex align-items-center rounded-0"
+            data-target="#content-container" data-url="{% url 'viewer:interactive:end' section.hash %}"
+            data-toc-target="#syllabus-toc-{{ bond_progress.id }}"
+            data-toc-url="{% url 'viewer:interactive:button' section.hash bond_progress.id %}"
+            data-timeout="{{ master_syllabus.timeout }}" id="interactive-next" disabled>
+        <span class="flex-fill text-end pe-3">Next</span>
+        <span class="d-flex align-items-center">{% include 'core/helpers/icon.html' with icon='arrow-right' size='2rem' %}</span>
+    </button>
+</div>

@@ -1,0 +1,25 @@
+{% extends 'viewer/interactive/content/interactive.html' %}
+
+{% block interactive_content %}
+    <div class="card bg-dark shadow-lg border-0 rounded-0 h2-border-dark">
+        {% include 'viewer/interactive/card/progress.html' with progress_percentage=0 %}
+        <h2 class="card-header border-0 rounded-0 pt-5 px-5 text-bg-dark">Welcome to Syllabee!</h2>
+        <div class="card-body px-5 pb-5 text-bg-dark">
+            <p>Syllabee is an interactive syllabus platform that allows you to navigate a syllabus piece by piece.
+                Generally, a syllabus provides you with a blueprint for a course and often serves as a contract
+                between you and your instructor. Within you're likely to find the course description, the course goals,
+                topics covered, course schedule, grade determination, textbook information, and more. Your instructor has
+                compiled all this information, which will be presented to you one section at a time.</p>
+            <p>Navigation is easy; click the button below to get started. On subsequent blocks, you'll also have a Previous
+                button if you need to go back and review anything (as long as your instructor has enabled this option).
+                At any time, you can use the Table of Contents on the right (click the button in the top right corner if
+                you are on mobile) to quickly navigate to any previously accessed blocks (again as long as your
+                instructor has enabled this option). You'll also have the option to save or print your syllabus once
+                you've visited all blocks (this option will be available directly beneath your instructor's contact
+                information on the Table of Contents).</p>
+            <p class="m-0">If you experience any issues, feel free to contact your instructor using one of the contact
+                methods at the top of the Table of Contents.</p>
+        </div>
+        {% include 'viewer/interactive/buttons/next.html' with next_text='Start' %}
+    </div>
+{% endblock %}

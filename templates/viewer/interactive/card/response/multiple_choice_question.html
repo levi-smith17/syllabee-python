@@ -1,0 +1,23 @@
+{% load viewer_extras %}
+{{ question.text|safe }}
+{% get_block_responses master_syllabus question as responses %}
+<ul class="d-grid gap-1 list-unstyled mt-3 p-0">
+    {% for r in responses %}
+        <li>
+            <input class="check-response btn-check" type="radio" name="responses" id="response-{{ r.id }}"
+                   value="{{ r.identifier }}" required data-form-id="{{ form_id }}"
+                    {% if show_answer and question.multiplechoicequestion.correct_response == r.identifier or attempt and attempt.answer == r.identifier %} checked{% endif %}
+                    {% if show_answer or attempt %} disabled{% endif %}>
+            <label class="btn btn-lg btn-outline-secondary d-flex align-items-center"
+                   for="response-{{ r.id }}" id="response-{{ r.id }}-label">
+                <span class="unchecked{% if show_answer and question.multiplechoicequestion.correct_response == r.identifier or attempt and attempt.answer == r.identifier %} d-none{% else %} d-flex{% endif %} align-items-center">
+                    {% include 'core/helpers/icon.html' with icon='circle' size='1.5rem' %}
+                </span>
+                <span class="checked{% if show_answer and question.multiplechoicequestion.correct_response == r.identifier or attempt and attempt.answer == r.identifier %} d-flex{% else %} d-none{% endif %} align-items-center text-info">
+                    {% include 'core/helpers/icon.html' with icon='record-circle' size='1.5rem' %}
+                </span>
+                <span class="flex-fill ps-3 text-start">{{ r.response }}</span>
+            </label>
+        </li>
+    {% endfor %}
+</ul>

@@ -1,0 +1,9 @@
+{% if previous %}
+    <div class="p-0 border-0 d-flex">
+        <button type="button" class="interactive-load btn btn-secondary flex-fill d-flex align-items-center rounded-0"
+                data-target="#content-container" data-url="{% url 'viewer:interactive:prev' section.hash previous.id %}"
+                data-toc-target="#syllabus-toc-{{ previous.id }}" data-toc-url="false">
+            {% include 'core/buttons/content.html' with icon='arrow-left' icon_color='' text='Previous' text_css='ps-3' size='2rem' %}
+        </button>
+    </div>
+{% endif %}

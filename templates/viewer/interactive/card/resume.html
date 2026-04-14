@@ -1,0 +1,15 @@
+{% extends 'viewer/interactive/content/interactive.html' %}
+
+{% block interactive_content %}
+    <div class="card bg-dark shadow-lg border-0 rounded-0 h2-border-dark">
+        {% include 'viewer/interactive/card/progress.html' %}
+        <h2 class="card-header border-0 rounded-0 pt-5 px-5 text-bg-dark">Welcome Back!</h2>
+        <div class="card-body px-5 pb-5 text-bg-dark">
+            It's great to have you back again! We've saved your previous progress, so you'll start back up where you left
+            off. If you have more than one course section with the same instructor, you'll find that any section (segment)
+            progress associated with your other course(s) has been carried over to this course section too. There is no
+            need to reread the same content!
+        </div>
+        {% include 'viewer/interactive/buttons/next.html' with next_text='Resume' %}
+    </div>
+{% endblock %}

@@ -1,0 +1,21 @@
+{% load core_extras %}
+<li class="d-grid gap-1 mb-2">
+    {% for key, value in filters.items %}
+        <span class="badge rounded-pill btn-dark text-bg-dark-header ps-3 d-inline-flex flex-nowrap align-items-center border border-secondary">
+            {{ key|filter_key }}: {{ key|filter_value:value }}
+            {% if filters.items|length > 1 %}
+                <button type="button" class="filter-clear btn btn-sm btn-dark btn-darker p-0 d-flex align-items-center ms-auto border-0"
+                        data-target="#content-container" data-url="{% url 'viewer:search:filter_clear' key %}"
+                        title="Clear Filter">
+                    {% include 'core/helpers/icon.html' with icon='x' size='1.5rem' %}
+                </button>
+            {% else %}
+                <button type="button" class="search-clear btn btn-sm btn-dark btn-darker p-0 d-flex align-items-center ms-auto border-0"
+                        data-field="#search-input" data-target="#content-container"
+                        data-url="{% url 'viewer:search:clear' %}" title="Clear Filter">
+                    {% include 'core/helpers/icon.html' with icon='x' size='1.5rem' %}
+                </button>
+            {% endif %}
+        </span>
+    {% endfor %}
+</li>

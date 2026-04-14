@@ -1,0 +1,8 @@
+{% load json_loaders %}
+{% if user.is_authenticated %}
+    {% get_json_content 'search' '' as json_content %}
+    {% get_json_profile '' as json_profile %}
+    {% get_json_toc 'search' '' as json_toc %}
+    {% url 'core:index' as json_url %}
+    {% include 'core/buttons/load_regions.html' with btn_color='dark btn-darker justify-content-center border-0 h-4r w-4r search-syllabi' icon='search' icon_color='' json_stage=False json_title='Syllabus Search' perms=True post_icon=False text='' text_css='' title='Syllabus Search' size='2rem' %}
+{% endif %}

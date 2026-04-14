@@ -1,0 +1,47 @@
+{% load core_extras json_loaders viewer_extras %}
+{% if user|has_group:'admins' or section.instructor == user %}
+    <li><h5 class="ps-3">Instructor Options</h5></li>
+    <li>
+        {% define_if '"'|addstr:view|addstr:'" == "interactive"' True False as perms %}
+        {% get_json_stage 'complete' '{"section_hash": "'|addstr:section.hash|addstr:'"}' as json_stage %}
+        {% get_json_toc 'complete' '{"section_hash": "'|addstr:section.hash|addstr:'"}' as json_toc %}
+        {% include 'core/buttons/load_regions.html' with btn_color='dark w-100' icon='journal-text' icon_color='' json_content=False json_profile=False json_title='' json_url=False post_icon=False text='Complete View' text_css='ps-3' title='View this Syllabus from a Completed Perspective' size='1.5rem' %}
+    </li>
+    <li>
+        {% define_if '"'|addstr:view|addstr:'" == "complete"' True False as perms %}
+        {% get_json_content 'interactive' '{"section_hash": "'|addstr:section.hash|addstr:'"}' as json_content %}
+        {% get_json_toc 'interactive' '{"section_hash": "'|addstr:section.hash|addstr:'"}' as json_toc %}
+        {% include 'core/buttons/load_regions.html' with btn_color='dark w-100' icon='journal-richtext' icon_color='' json_stage=False json_profile=False json_title='' json_url=False post_icon=False text='Interactive View ('|addstr:section_progress.progress|addstr:'%)' text_css='ps-3' title='View the Interactive Version of this Syllabus' size='1.5rem' %}
+    </li>
+    {% if user|has_group:'instructors' and section.instructor == user %}
+        <li>
+            {% get_segment_id_from_section section as segment_id %}
+            {% get_json_content 'editor' '{"master_syllabus_id": "'|addstr:master_syllabus.id|addstr:'", "segment_id": "'|addstr:segment_id|addstr:'"}' as json_content %}
+            {% get_json_toc 'editor' '{"master_syllabus_id": "'|addstr:master_syllabus.id|addstr:'", "segment_id": "'|addstr:segment_id|addstr:'"}' as json_toc %}
+            {% include 'core/buttons/load_regions.html' with btn_color='dark w-100' icon='pencil' icon_color='' json_stage=False json_profile=False json_title=master_syllabus json_url='/editor/' perms=True post_icon=False text='Editor View' text_css='ps-3' title='Edit this Master Syllabus' size='1.5rem' %}
+        </li>
+        <li>
+            {% get_json_content 'progress' '{"master_syllabus_id": "'|addstr:master_syllabus.id|addstr:'", "section_id": "'|addstr:section.id|addstr:'"}' as json_content %}
+            {% get_json_toc 'editor' '{"master_syllabus_id": "'|addstr:master_syllabus.id|addstr:'", "segment_id": "'|addstr:segment_id|addstr:'"}' as json_toc %}
+            {% include 'core/buttons/load_regions.html' with btn_color='dark w-100' icon='bar-chart-steps' icon_color='' json_stage=False json_profile=False json_title='' json_url=False perms=True post_icon=False text='Student Progress' text_css='ps-3' title='Student Progress' size='1.5rem' %}
+        </li>
+    {% endif %}
+    <li><hr></li>
+{% endif %}
+{% if view == 'complete' %}
+    <li>
+        {% if print_modal %}
+            <button type="button" class="print-btn btn btn-dark text-white d-flex align-items-center w-100"
+                    data-url="{% url 'viewer:print:confirm' section.hash %}"
+                    title="Print" data-control="modal" aria-controls="modal-generic">
+                {% include 'core/buttons/content.html' with icon='printer' icon_color='' text='Print' text_css='ps-3' size='1.5rem' %}
+            </button>
+        {% else %}
+            <a href="{% url 'viewer:print:index' section.hash %}"
+               target="_blank" class="btn btn-dark text-white d-flex align-items-center">
+                {% include 'core/buttons/content.html' with icon='printer' icon_color='' text='Print' text_css='ps-3' size='1.5rem' %}
+            </a>
+        {% endif %}
+    </li>
+    <li><hr></li>
+{% endif %}

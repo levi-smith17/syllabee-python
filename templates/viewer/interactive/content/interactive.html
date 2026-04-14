@@ -1,0 +1,11 @@
+{% load viewer_extras %}
+<div class="d-grid align-content-start gap-3 p-3">
+    {% if visible or section.instructor == user %}
+        {% if not visible %}
+            {% include 'viewer/messages/unavailable_instructor.html' %}
+        {% endif %}
+        {% block interactive_content %}{% endblock %}
+    {% else %}
+        {% include 'viewer/messages/unavailable_student.html' %}
+    {% endif %}
+</div>

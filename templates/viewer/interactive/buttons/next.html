@@ -1,0 +1,18 @@
+{% if next %}
+    <div class="p-0 border-0 d-flex">
+        <button type="button" class="interactive-load btn btn-secondary flex-fill d-flex align-items-center rounded-0"
+                data-target="#content-container" data-url="{% url 'viewer:interactive:next' section.hash next.id %}"
+                data-toc-target="#syllabus-toc-{{ next.id }}"
+                data-toc-url="{% url 'viewer:interactive:button' section.hash next.id %}"
+                {% if next_text == 'Next' %}data-toc-prev-target="#syllabus-toc-{{ bond_progress.id }}"
+                data-toc-prev-url="{% url 'viewer:interactive:button' section.hash bond_progress.id %}"{% endif %}
+                id="interactive-next"
+                {% if not next.start_time and master_syllabus.timeout > 0 %} data-timeout="{{ master_syllabus.timeout }}"{% endif %}
+                {% if not next.start_time and master_syllabus.timeout > 0 or next_text == 'Resume' or next_text == 'Start' %} disabled{% endif %}>
+            <span class="flex-fill text-end pe-3">{{ next_text }}</span>
+            <span class="d-flex align-items-center">{% include 'core/helpers/icon.html' with icon='arrow-right' size='2rem' %}</span>
+        </button>
+    </div>
+{% else %}
+    {% include 'viewer/interactive/buttons/end.html' %}
+{% endif %}

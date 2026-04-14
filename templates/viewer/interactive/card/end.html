@@ -1,0 +1,25 @@
+{% extends 'viewer/interactive/content/interactive.html' %}
+{% load core_extras json_loaders %}
+
+{% block interactive_content %}
+    <div class="card bg-dark shadow-lg border-0 rounded-0 h2-border-dark">
+        {% include 'viewer/interactive/card/progress.html' %}
+        {% include 'viewer/interactive/buttons/previous.html' %}
+        <h2 class="card-header border-0 rounded-0 pt-5 px-5 text-bg-dark">Congratulations!</h2>
+        <div class="card-body px-5 pb-5 text-bg-dark">
+            <p>You've completed your review of this syllabus! However, you must click the Complete button
+                below to save your progress. Once you've done so, you'll get access to the options necessary to
+                download or print this syllabus.</p>
+            <p>Note that by clicking the Complete button below you agree to be bound by the expectations and policies
+                laid out in this syllabus by your instructor. If you do not agree, please reach out to your instructor
+                for direction.
+            </p>
+        </div>
+        <div class="p-0 border-0 d-flex">
+            {% get_json_content 'complete' '{"section_hash": "'|addstr:section.hash|addstr:'"}' as json_content %}
+            {% get_json_content 'end' '{"section_hash": "'|addstr:section.hash|addstr:'"}' as json_stage %}
+            {% get_json_toc 'complete' '{"section_hash": "'|addstr:section.hash|addstr:'"}' as json_toc %}
+            {% include 'core/buttons/load_regions.html' with btn_color='success flex-fill rounded-0' icon='' icon_color='' json_profile=False json_title=False json_url=False perms=True post_icon='arrow-right' text='Complete' text_css='text-end' title='Mark Syllabus Review Complete!' size='1.5rem' %}
+        </div>
+    </div>
+{% endblock %}

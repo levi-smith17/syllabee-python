@@ -1,0 +1,21 @@
+{% if block.type == 'content' %}
+    {% include 'core/helpers/icon.html' with icon='card-text' size='1.5rem' %}
+{% elif block.type == 'course_syllabus' %}
+    {% include 'core/helpers/icon.html' with icon='file-earmark-check' size='1.5rem' %}
+{% elif block.type == 'details' %}
+    {% include 'core/helpers/icon.html' with icon='caret-right-fill' size='1.5rem' %}
+{% elif block.type == 'file' %}
+    {% include 'core/helpers/icon.html' with icon='file-earmark' size='1.5rem' %}
+{% elif block.type == 'grade_determination' %}
+    {% include 'core/helpers/icon.html' with icon='journal-check' size='1.5rem' %}
+{% elif block.type == 'list' %}
+    {% include 'core/helpers/icon.html' with icon='list-ul' size='1.5rem' %}
+{% elif block.type == 'response' %}
+    {% include 'core/helpers/icon.html' with icon='question-lg' size='1.5rem' %}
+{% elif block.type == 'schedule' %}
+    {% include 'core/helpers/icon.html' with icon='calendar-week' size='1.5rem' %}
+{% elif block.type == 'table' %}
+    {% include 'core/helpers/icon.html' with icon='table' size='1.5rem' %}
+{% elif block.type == 'video' %}
+    {% include 'core/helpers/icon.html' with icon='camera-video' size='1.5rem' %}
+{% endif %}

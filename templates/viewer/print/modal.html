@@ -1,0 +1,25 @@
+<form action="{{ modal.url }}" method="post" class="ajax-print was-validated" target="_blank" data-url="{{ modal.url }}">
+    {% csrf_token %}
+    <div class="modal-body text-bg-dark">
+        <div class="alert alert-info" role="alert">{{ modal.message }}</div>
+        <div class="d-grid gap-3">
+            {% for segment in modal.segments %}
+                <div class="input-group input-group-lg">
+                    <div class="input-group-text input-group-lg text-bg-dark border-secondary">
+                        <input class="form-check-input mt-0" type="checkbox" name="segments[]" value="{{ segment.id }}"
+                               aria-label="Check this box to include this content when printing.">
+                    </div>
+                    <textarea class="form-control text-bg-dark fs-6 border-secondary"
+                              aria-label="Content to include when printing." disabled
+                              rows="2">{{ segment.name }}: {{ segment.description }}</textarea>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+    <div class="modal-footer text-bg-dark border-secondary gap-3">
+        {% include 'core/buttons/form/dismiss.html' with text='Cancel' %}
+        <button type="submit" class="btn btn-warning btn-lg d-flex align-items-center" onclick="core.modal.hide();">
+            {% include 'core/buttons/content.html' with icon='printer' icon_color='' text='Print' text_css='fs-5 ps-3' size='1.5rem' %}
+        </button>
+    </div>
+</form>

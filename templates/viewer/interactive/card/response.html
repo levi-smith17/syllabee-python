@@ -1,0 +1,52 @@
+{% extends 'viewer/interactive/content/interactive.html' %}
+{% load core_extras viewer_extras %}
+
+{% block interactive_content %}
+    {% if master_syllabus.prohibit_backtracking %}
+        {% include 'core/helpers/alert.html' with alert_css='mb-0' icon='info-square' text='<strong>NOTE</strong>: your instructor has prohibited backtracking for this interactive syllabus. As a result, you are not permitted to use the <strong>Table of Contents</strong> to navigate this syllabus. You also will not be able to access any content before this block. Once you have completed this activity you will be able to access the entire syllabus.' text_css='ps-3' type='info' %}
+    {% endif %}
+    <div id="{{ bond_progress.bond.block.name|lower_snake }}" class="card bg-dark shadow-lg border-0 rounded-0 h3-border-dark">
+        {% include 'viewer/interactive/card/progress.html' %}
+        {% if not master_syllabus.prohibit_backtracking %}{% include 'viewer/interactive/buttons/previous.html' %}{% endif %}
+        <h3 class="card-header border-0 rounded-0 pt-5 px-5 text-bg-dark">
+            {{ bond_progress.bond.block.name }}
+        </h3>
+        <form action="{% url 'viewer:interactive:check' section.hash bond_progress.id %}" method="get"
+              id="response-form" class="check-form" data-target="#content-container">
+            {% csrf_token %}
+            <div class="card-body px-5 pb-5 text-bg-dark">
+                {% if not bond_progress.completed %}
+                    {% if response_correct %}
+                        {% include 'core/helpers/alert.html' with alert_css='m-0' icon='check-square' text='That answer is correct! Please click Next to continue.' text_css='ps-3' type='success' %}
+                    {% elif response_correct == False %}
+                        {% define_if attempts_remaining|addstr:' > 0' ' Please try again.' ' Please click Next to continue.' as additional_alert %}
+                        {% include 'core/helpers/alert.html' with alert_css='mb-3' icon='x-square' text='That answer is incorrect.'|addstr:additional_alert text_css='ps-3' type='danger' %}
+                    {% endif %}
+                    {% if not response_correct %}
+                        {% if master_syllabus.points_ladder %}
+                            {% include 'core/helpers/alert.html' with alert_css='mb-3' icon='exclamation-square' text='<strong>WARNING</strong>: your instructor has enabled point deductions for this interactive syllabus. As a result, you will lose <strong>'|addstr:master_syllabus.points_ladder_deduction|addstr:'</strong> point(s) for each incorrect response.' text_css='ps-3' type='warning' %}
+                        {% endif %}
+                        {% if attempts_remaining > 0 %}
+                            {% include 'core/helpers/alert.html' with alert_css='mb-3' icon='info-square' text='<strong>NOTE</strong>: you have <strong>'|addstr:attempts_remaining_str|addstr:'</strong> attempt(s) remaining for this block.' text_css='ps-3' type='info' %}
+                            {% has_attr bond_progress.responseprogress.question 'multiplechoicequestion' as is_multiple_choice_question %}
+                            {% has_attr bond_progress.responseprogress.question 'truefalsequestion' as is_true_false_question %}
+                            {% define '#response-form' as form_id %}
+                            {% if is_multiple_choice_question %}
+                                {% include 'viewer/interactive/card/response/multiple_choice_question.html' with attempt=None question=bond_progress.responseprogress.question show_answer=False %}
+                            {% elif is_true_false_question %}
+                                {% include 'viewer/interactive/card/response/true_false_question.html' with attempt=None question=bond_progress.responseprogress.question show_answer=False %}
+                            {% else %}
+                                {% include 'core/helpers/alert.html' with alert_css='mb-3' icon='x-square' text='<strong>ERROR</strong>: unsupported response block type. Please contact your system administrator.' text_css='ps-3' type='danger' %}
+                            {% endif %}
+                        {% else %}
+                            {% include 'core/helpers/alert.html' with alert_css='m-0' icon='info-square' text='<strong>NOTE</strong>: you have no attempts remaining for this block.' text_css='ps-3' type='info' %}
+                        {% endif %}
+                    {% endif %}
+                {% else %}
+                    {% include 'core/helpers/alert.html' with alert_css='m-0' icon='info-square' text='<strong>NOTE</strong>: this block has already been completed. Please click Next to continue.' text_css='ps-3' type='info' %}
+                {% endif %}
+            </div>
+            {% include 'viewer/interactive/buttons/check.html' %}
+        </form>
+    </div>
+{% endblock %}

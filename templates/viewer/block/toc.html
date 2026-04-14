@@ -1,0 +1,16 @@
+{% load core_extras json_loaders %}
+{% if user|has_group:'instructors' %}
+    <li>
+        {% get_json_content 'editor' '{"master_syllabus_id": "'|addstr:master_syllabus.id|addstr:'"}' as json_content %}
+        {% get_json_toc 'editor' '{"master_syllabus_id": "'|addstr:master_syllabus.id|addstr:'"}' as json_toc %}
+        {% include 'core/buttons/load_regions.html' with btn_color='dark w-100' icon='pencil' icon_color='' json_stage=False json_profile=False json_title=master_syllabus json_url='/editor/' perms=True post_icon=False text='Editor View' text_css='ps-3' title='Edit this Master Syllabus' size='1.5rem' %}
+    </li>
+    <li><hr></li>
+{% endif %}
+<li>
+    <a href="{% url 'viewer:block:print' instructor.user.username permalink %}" target="_blank"
+       class="btn btn-dark text-white d-flex align-items-center">
+        {% include 'core/buttons/content.html' with icon='printer' icon_color='' text='Print' text_css='ps-3' size='1.5rem' %}
+    </a>
+</li>
+<li><hr></li>

@@ -1,0 +1,11 @@
+{% load core_extras %}
+<div class="btn-group position-absolute end-0 mt-2 me-2">
+    {% include 'editor/helpers/buttons/dropdown_toggle.html' with auto_close='true' btn_color='dark rounded' icon='exclamation-circle' icon_color='warning' perm=True text='' text_css='' title='View Warning' %}
+    <ul class="dropdown-menu dropdown-menu-dark dropdown-menu-end p-0 shadow-lg min-width-40vw">
+        <li>
+            {% define addendum.date_time|date:'F jS, Y' as date %}
+            {% define addendum.date_time|time:'g:i A' as time %}
+            {% include 'core/helpers/alert.html' with alert_css='m-0' icon='' text='<strong>WARNING</strong>: your instructor modified this content on <strong>'|addstr:date|addstr:'</strong> at <strong>'|addstr:time|addstr:'</strong>. Please contact them if you have any questions or concerns.' text_css='' type='warning' %}
+        </li>
+    </ul>
+</div>

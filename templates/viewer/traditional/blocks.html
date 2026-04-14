@@ -1,0 +1,36 @@
+{% load core_extras viewer_extras %}
+{% for bond in bonds %}
+    {% ifchanged bond.segment.name %}
+        <li>
+            <button class="scroll-to btn btn-dark text-white d-flex align-items-center fw-bold fs-5 text-start w-100 mb-2{% if not forloop.first %} mt-2{% endif %} pad-s-{{ bond.segment.print_heading }}"
+                    type="button" data-scroll-to="#segment-{{ bond.segment.name|lower_snake }}">
+                {{ bond.segment.name }}
+            </button>
+        </li>
+    {% endifchanged %}
+    {% get_addendum master_syllabus bond.block as addendum %}
+    {% if bond.block.printableblock.print_group %}
+        {% regroup bonds by block.printableblock.print_group as grouped_bonds %}
+        {% for grouped_bond in grouped_bonds %}
+            {% if grouped_bond.grouper and bond.id == grouped_bond.list.0.id %}
+                <li>
+                    <button class="scroll-to btn btn-dark text-white d-flex align-items-center w-100 pad-s-{{ grouped_bond.list.0.block.printableblock.print_heading }}"
+                            type="button" data-scroll-to="#{{ grouped_bond.grouper|lower_snake }}">
+                        <span class="d-flex align-items-center">{% include 'viewer/helpers/icon.html' with block=grouped_bond.list.0.block %}</span>
+                        <span class="flex-fill text-start ps-3">{{ grouped_bond.grouper }}</span>
+                        {% if addendum %}{% include 'viewer/addendum/icon.html' %}{% endif %}
+                    </button>
+                </li>
+            {% endif %}
+        {% endfor %}
+    {% else %}
+        <li>
+            <button class="scroll-to btn btn-dark text-white text-start d-flex align-items-center w-100 pad-s-{{ bond.block.printableblock.print_heading }}"
+                    type="button" data-scroll-to="#{{ bond.block.name|lower_snake }}">
+                <span class="d-flex align-items-center">{% include 'viewer/helpers/icon.html' with block=bond.block %}</span>
+                <span class="flex-fill text-start ps-3">{{ bond.block.name }}</span>
+                {% if addendum %}{% include 'viewer/addendum/icon.html' %}{% endif %}
+            </button>
+        </li>
+    {% endif %}
+{% endfor %}
