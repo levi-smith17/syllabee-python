@@ -1,0 +1,27 @@
+{% load core_extras json_loaders %}
+<div class="btn-group btn-group-lg d-flex justify-content-end bg-{% if from_toc %}dark{% else %}secondary rounded-0 position-sticky top-0 z-200{% endif %}"
+     role="group">
+    {% if not from_toc %}
+        <div class="btn-group me-auto">
+            {% get_json_content 'portfolio' '{"portfolio_id": "'|addstr:portfolio.id|addstr:'"}' as json_content %}
+            {% get_json_toc 'portfolio' '{"portfolio_id": "'|addstr:portfolio.id|addstr:'"}' as json_toc %}
+            {% include 'core/buttons/load_regions.html' with btn_color='secondary rounded-0' icon='arrow-clockwise' icon_color='' json_stage=False json_profile=False json_title=False json_url=False perms=True post_icon=False text='' text_css='' title='Reload' size='1.5rem' %}
+            {% if user|has_group:'admins' or user|has_group:'instructors' %}
+                <div class="d-flex align-items-center px-3 py-2">Student: {{ portfolio.student }}</div>
+            {% endif %}
+        </div>
+        <div class="btn-group">
+            {% url 'portfolio:review:create' portfolio.id as url %}
+            {% include 'editor/helpers/buttons/offcanvas_modal.html' with btn_color='secondary' control='offcanvas' full=False icon='plus-lg' icon_color='' next=False perm=True text='' text_css='' title='Add Review' %}
+            <a href="{% url 'portfolio:print' portfolio.id %}" class="btn btn-secondary btn-lg d-flex align-items-center"
+               title="Print Portfolio Reviews" target="_blank">
+                {% include 'core/helpers/icon.html' with icon='printer' size='1.5rem' %}
+            </a>
+            <a href="{% url 'portfolio:download' portfolio.id %}" class="btn btn-secondary btn-lg d-flex align-items-center"
+               title="Download Portfolio Reviews" target="_blank">
+                {% include 'core/helpers/icon.html' with icon='filetype-pdf' size='1.5rem' %}
+            </a>
+        </div>
+    {% endif %}
+    {% include 'portfolio/options/manage.html' %}
+</div>

@@ -1,0 +1,17 @@
+{% load core_extras %}
+<div class="btn-group">
+    {% define_if from_toc 'dark rounded-0 rounded-end' 'secondary rounded-0' as btn_color %}
+    {% include 'editor/helpers/buttons/dropdown_toggle.html' with auto_close='true' icon='three-dots' icon_color='' perm=True text='' text_css='' title='Manage Internship' %}
+    <ul class="dropdown-menu dropdown-menu-dark dropdown-menu-end shadow-lg">
+        <li><h6 class="dropdown-header">Manage Internship</h6></li>
+        <li>
+            {% url 'internship:journal:update' internship.id as url %}
+            {% include 'editor/helpers/buttons/dropdown.html' with control='offcanvas' full=False icon='pencil' icon_color='' next=False text='Edit' title='Edit Internship' %}
+        </li>
+        <li><hr class="dropdown-divider"></li>
+        <li>
+            {% url 'internship:journal:delete' internship.id as url %}
+            {% include 'editor/helpers/buttons/dropdown.html' with control='modal' full=False icon='trash3' icon_color='danger' next=False text='Delete (Forever)' title='Delete Internship (Forever)' %}
+        </li>
+    </ul>
+</div>

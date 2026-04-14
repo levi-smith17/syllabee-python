@@ -1,0 +1,33 @@
+{% load core_extras json_loaders %}
+<div class="btn-group btn-group-lg d-grid text-bg-{% if from_toc %}dark{% else %}secondary position-sticky rounded-0 top-14px z-25{% endif %}">
+    <div class="btn-group btn-group-lg">
+        {% if not from_toc %}
+            <div class="btn-group me-auto">
+                {% get_json_content 'internship' '{"internship_id": "'|addstr:internship.id|addstr:'"}' as json_content %}
+                {% get_json_toc 'internship' '{"internship_id": "'|addstr:internship.id|addstr:'"}' as json_toc %}
+                {% include 'core/buttons/load_regions.html' with btn_color='secondary rounded-0' icon='arrow-clockwise' icon_color='' json_stage=False json_profile=False json_title=False json_url=False perms=True post_icon=False text='' text_css='' title='Reload' size='1.5rem' %}
+                {% if user|has_group:'admins' or user|has_group:'instructors' %}
+                    <div class="px-3 py-2">Intern: {{ internship.intern }}</div>
+                {% endif %}
+            </div>
+            <div class="btn-group">
+                {% url 'internship:journal:location:create' internship.id as url %}
+                {% include 'editor/helpers/buttons/offcanvas_modal.html' with btn_color='secondary' control='offcanvas' full=False icon='plus-lg' icon_color='' next=False perm=True text='' text_css='' title='Add Location' %}
+                <a href="{% url 'internship:journal:print' internship.id %}" class="btn btn-secondary btn-lg d-flex align-items-center"
+                   title="Print Internship Journal" target="_blank">
+                    {% include 'core/helpers/icon.html' with icon='printer' size='1.5rem' %}
+                </a>
+                <a href="{% url 'internship:journal:download' internship.id %}" class="btn btn-secondary btn-lg d-flex align-items-center"
+                   title="Download Internship Journal" target="_blank">
+                    {% include 'core/helpers/icon.html' with icon='filetype-pdf' size='1.5rem' %}
+                </a>
+            </div>
+        {% endif %}
+        {% if user|has_group:'admins' or user|has_group:'instructors' %}
+            {% include 'internship/journal/options/manage.html' %}
+        {% endif %}
+    </div>
+    {% if not from_toc %}
+        {% include 'internship/journal/footer.html' with location_id=False %}
+    {% endif %}
+</div>

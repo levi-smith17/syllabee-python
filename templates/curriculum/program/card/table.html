@@ -1,0 +1,52 @@
+{% load curriculum_extras %}
+<div class="curriculum-head d-flex justify-content-end w-100"><p class="text-end">Form 701.2A<br>Associate Degree<br>Program Summary</p></div>
+<table class="table table-dark table-borderless table-hover curriculum m-0">
+    {% get_footnotes program as footnotes %}
+    {% include 'curriculum/program/card/header.html' %}
+    <tbody>
+    {% for term in terms %}
+        <tr>
+            {% if not print %}<td class="text-center align-middle p-0">{% include 'curriculum/program/term/options/manage.html' %}</td>{% endif %}
+            <td class="px-1 py-0">&nbsp;</td>
+            <td class="text-center align-middle px-1 py-0">{{ term|upper }}</td>
+            <td class="px-1 py-0">&nbsp;</td>
+            <td class="px-1 py-0">&nbsp;</td>
+            <td class="px-1 py-0">&nbsp;</td>
+            <td class="px-1 py-0">&nbsp;</td>
+            <td class="px-1 py-0">&nbsp;</td>
+            {% if not print %}<td class="text-center align-middle p-0">{% include 'curriculum/program/term/options/errors.html' %}</td>{% endif %}
+        </tr>
+        {% for course in courses %}
+            {% if term.id == course.term.id %}
+                {% get_course_extensions course as extensions %}
+                {% include 'curriculum/program/term/course/row.html' with extension=False %}
+                {% for extension in extensions %}
+                    {% include 'curriculum/program/term/course/row.html' with extension=True course=extension %}
+                {% endfor %}
+            {% endif %}
+        {% endfor %}
+        <tr>
+            <td colspan="{% if print %}1{% else %}2{% endif %}" class="px-1 py-0">&nbsp;</td>
+            <td class="text-end align-middle px-1 py-0">Total</td>
+            <td class="text-center align-middle px-1 py-0">{% get_term_total 'class' program.id term.id as total %}{{ total }}</td>
+            <td class="text-center align-middle px-1 py-0">{% get_term_total 'lab' program.id term.id as total %}{{ total }}</td>
+            {% for credit_type in credit_types %}
+                <td class="text-center align-middle px-1 py-0">{% get_term_total 'credit' program.id term.id credit_type.id as total %}{{ total }}</td>
+            {% endfor %}
+            {% if not print %}<td rowspan="2">&nbsp;</td>{% endif %}
+        </tr>
+        <tr>
+            <td colspan="{% if print %}6{% else %}7{% endif %}" class="text-end align-middle px-1 py-0">Credit Hour Subtotal</td>
+            {% get_term_total 'credit' program.id term.id as total %}
+            <td class="text-center align-middle px-1 py-0">{{ total }}</td>
+        </tr>
+    {% empty %}
+        <tr>
+            <td colspan="9">
+                {% include 'core/helpers/alert.html' with alert_css='m-2' icon='info-square' text_css='ps-3' text='There are no terms associated with this program yet! Use the Add (+) button above to add a term.' type='info' %}
+            </td>
+        </tr>
+    {% endfor %}
+    </tbody>
+    {% include 'curriculum/program/card/footer.html' %}
+</table>

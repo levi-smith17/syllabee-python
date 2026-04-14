@@ -1,0 +1,19 @@
+{% load core_extras portfolio_extras json_loaders %}
+<div id="content-container-data" class="d-none"
+        {% if portfolio %} data-content-json="{% get_json_content 'portfolio' '{"portfolio_id": "'|addstr:portfolio.id|addstr:'"}' %}"{% endif %}></div>
+{% if portfolio %}
+    {% include 'portfolio/options/options.html' with from_toc=False %}
+    <div id="portfolio-{{ portfolio.id }}" class="card border-0 d-grid gap-3 p-3 rounded-0 text-bg-dark">
+        {% if user|has_group:'portfolio_creators' %}
+            {% include 'core/helpers/alert.html' with alert_css='m-0' icon='info-square' text_css='ps-3' text='<strong>Welcome to your portfolio reviews tracker</strong>! Before you can begin conducting your portfolio reviews, you must follow these steps: <ol><li>Add a portfolio review using the plus button above.</li><li>Contact your instructor, so they can reach out to your portfolio reviewer and have them conduct your portfolio review.</li><li>Once your portfolio reviewer has finished inputting their feedback, you can access it here immediately.</li></ol>If at any point in time you have questions or need help, do not hesitate to reach out to your instructor.' type='info' %}
+            {% include 'core/helpers/alert.html' with alert_css='m-0' icon='exclamation-square' text_css='ps-3' text='Portfolio reviews that do not follow the above process will not be awarded credit.' type='warning' %}
+        {% endif %}
+        {% for review in reviews %}
+            {# {% include 'portfolio/review/card.html' % #}
+        {% empty %}
+            {% include 'core/helpers/alert.html' with alert_css='m-0' icon='info-square' text_css='ps-3' text='No portfolio reviews have been added yet! Please use the plus button above to add a portfolio review.' type='info' %}
+        {% endfor %}
+    </div>
+{% else %}
+    {% include 'core/helpers/alert.html' with alert_css='m-3' icon='info-square' text_css='ps-3' text='No portfolio selected. Please select a portfolio on the right.' type='info' %}
+{% endif %}

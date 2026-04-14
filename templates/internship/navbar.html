@@ -1,0 +1,8 @@
+{% load core_extras json_loaders %}
+{% if user|has_group:'instructors' %}
+    {% get_json_content 'internship' '' as json_content %}
+    {% get_json_profile '{"instructor_id": "'|addstr:user.id|addstr:'"}' as json_profile %}
+    {% get_json_toc 'internship' '' as json_toc %}
+    {% url 'internship:index' as json_url %}
+    {% include 'core/buttons/load_regions.html' with btn_color='dark btn-darker justify-content-center border-0 h-4r w-4r' icon='person-workspace' icon_color='' json_stage=False json_title='Internship Management' perms=True post_icon=False text='' text_css='' title='Internship Management' size='2rem' %}
+{% endif %}

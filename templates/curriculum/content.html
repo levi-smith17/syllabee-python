@@ -1,0 +1,7 @@
+{% if program %}
+    {% include 'curriculum/program/card/card.html' %}
+{% else %}
+    <div class="p-3">
+        {% include 'core/helpers/alert.html' with alert_css='m-0' icon='info-square' text_css='ps-3' text='No program selected! Please select a program from the table of contents.' type='info' %}
+    </div>
+{% endif %}

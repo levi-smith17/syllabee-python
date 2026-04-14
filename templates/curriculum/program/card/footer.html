@@ -1,0 +1,22 @@
+{% load curriculum_extras %}
+<tfoot>
+<tr>
+    <td colspan="{% if print %}1{% else %}2{% endif %}" class="px-1 py-0">&nbsp;</td>
+    <td class="text-end align-middle px-1 py-0">Grand Total</td>
+    <td class="text-center align-middle px-1 py-0">{% get_term_total 'class' program.id as total %}{{ total }}</td>
+    <td class="text-center align-middle px-1 py-0">{% get_term_total 'lab' program.id as total %}{{ total }}</td>
+    {% for credit_type in credit_types %}
+        <td class="text-center align-middle px-1 py-0">{% get_term_total 'credit' program.id None credit_type.id as total %}{{ total }}</td>
+    {% endfor %}
+    {% if not print %}<td rowspan="2">&nbsp;</td>{% endif %}
+</tr>
+<tr>
+    <td colspan="{% if print %}6{% else %}7{% endif %}" class="text-end align-middle px-1 py-0">Credit Hour Grand Total</td>
+    <td class="text-center align-middle px-1 py-0">{% get_term_total 'total' program.id as total %}{{ total }}</td>
+</tr>
+{% for footnote_key, footnote_value in footnotes.items %}
+    <tr class="footnote">
+        <td colspan="{% if print %}7{% else %}9{% endif %}"><sup>{{ footnote_key }}</sup>{{ footnote_value }}</td>
+    </tr>
+{% endfor %}
+</tfoot>

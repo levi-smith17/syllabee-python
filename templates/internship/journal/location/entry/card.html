@@ -1,0 +1,35 @@
+{% load core_extras internship_extras %}
+{% if location.validated %}
+    {% get_journal_entries location.id as entries %}
+    {% for entry in entries %}
+        <div class="accordion-item">
+            <div class="accordion-header">
+                <button class="accordion-button collapsed d-flex align-items-center" data-bs-toggle="collapse"
+                        data-bs-target="#location-{{ location.id }}-collapse-{{ entry.id }}" type="button"
+                        aria-expanded="false" aria-controls="location-{{ location.id }}-collapse-{{ entry.id }}">
+                    {% define_if entry.verified 'check-circle' 'ban' as icon %}
+                    {% define_if entry.verified 'success' 'danger' as icon_color %}
+                    <div class="opacity-50 p-0 pe-3 text-{{ icon_color }}" title="Verification Status">{% include 'core/helpers/icon.html' with size='1.5rem' %}</div>
+                    <div class="fs-6">{{ entry.date }}, {{ entry.time_start }}-{{ entry.time_end }} ({{ entry.total_time_minutes }} minutes) &mdash; {{ entry.title }}</div>
+                </button>
+            </div>
+            <div id="location-{{ location.id }}-collapse-{{ entry.id }}" class="accordion-collapse collapse"
+                 data-bs-parent="#location-{{ location.id }}-accordion">
+                <div class="accordion-body d-flex p-0">
+                    {% if user|has_group:'admins' or user|has_group:'instructors' or not entry.verified %}
+                        {% include 'internship/journal/location/entry/options/options.html' %}
+                    {% endif %}
+                    <div class="p-3 text-break">{{ entry.description|safe }}</div>
+                </div>
+            </div>
+        </div>
+    {% empty %}
+        {% include 'core/helpers/alert.html' with alert_css='m-0 rounded-0' icon='info-square' text_css='ps-3' text='No journal entries have been added yet. Please use the plus button on the left to add an entry.' type='info' %}
+    {% endfor %}
+{% else %}
+    {% if user|has_group:'admins' or user|has_group:'instructors' %}
+        {% include 'core/helpers/alert.html' with alert_css='m-0 rounded-0' icon='exclamation-square' text_css='ps-3' text='This location must be validated before journal entries can be added.' type='warning' %}
+    {% else %}
+        {% include 'core/helpers/alert.html' with alert_css='m-0 rounded-0' icon='exclamation-square' text_css='ps-3' text='This location must be validated before journal entries can be added. Please contact your instructor.' type='warning' %}
+    {% endif %}
+{% endif %}

@@ -1,0 +1,51 @@
+{% extends 'core/base.html' %}
+{% load static core_extras internship_extras %}
+{% block title %}{{ title }}{% endblock %}
+
+{% block css %}
+    <link rel="stylesheet" type="text/css" href="{% static 'core/css/print.scss' %}" media="print">
+{% endblock %}
+
+{% block main %}
+    <!-- Container -->
+    <article>
+        <section>
+            <h1>{{ title }}</h1>
+            <h2>{{ branding.institution }}</h2>
+        </section>
+        <section>
+            <h3>Internship Coordinator Information</h3>
+            <ul>
+                {% include 'editor/profile/instructor.html' with office_hours=master_syllabus.office_hours print=True show_all=True %}
+            </ul>
+            <h3>Intern Information</h3>
+            <ul>
+                <li>Intern: {{ internship.intern }}</li>
+                <li>Section: {{ internship.section }}</li>
+                <li>Total Verified Hours Completed: {{ internship.completed_hours }} hour{{ internship.completed_hours|plural }} out of {{ internship_settings.journal_required_hours }}</li>
+            </ul>
+        </section>
+        {% for location in locations %}
+            <section>
+                <h3>Internship Site #{{ forloop.counter }}</h3>
+                <ul>
+                    <li>Site Name: {{ location.name }}</li>
+                    <li>Supervisor Name: {{ location.supervisor_first_name }} {{ location.supervisor_last_name }}</li>
+                    <li>Supervisor Email: {{ location.supervisor_email }}</li>
+                    <li>Supervisor Phone: {{ location.supervisor_phone }}</li>
+                </ul>
+                {% get_journal_entries location.id as entries %}
+                {% for entry in entries %}
+                    <h5>{{ entry.date }}, {{ entry.time_start }}-{{ entry.time_end }} ({{ entry.total_time_minutes }} minutes) &mdash; {{ entry.title }}</h5>
+                    <p>{{ entry.description|safe }}</p>
+                {% endfor %}
+            </section>
+        {% endfor %}
+    </article>
+    <!-- END Container -->
+
+    <script type="text/javascript">
+        window.onafterprint = window.close;
+        window.print();
+    </script>
+{% endblock %}

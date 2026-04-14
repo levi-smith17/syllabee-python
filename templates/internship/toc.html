@@ -1,0 +1,39 @@
+{% load core_extras json_loaders %}
+{% if user|has_group:'admins' or user|has_group:'instructors' %}
+    <li class="d-grid" style="margin-top: -0.25rem">
+        <div class="d-flex align-items-center justify-content-between ps-3">
+            <h5 class="m-0">Internships</h5>
+            {% include 'internship/options/options.html' with from_toc=True %}
+        </div>
+        <hr>
+        <div class="accordion accordion-flush" id="internships-accordion">
+            {% regroup internships by section as sections %}
+            {% for section in sections %}
+                <div class="accordion-item">
+                    <h6 class="accordion-header">
+                        <button class="accordion-button{% if current_term|lower not in section.grouper|lower %} collapsed{% endif %}" type="button" data-bs-toggle="collapse"
+                                data-bs-target="#section-{{ forloop.counter }}-collapse" aria-expanded="{% if current_term|lower in section.grouper|lower %}true{% else %}false{% endif %}"
+                                aria-controls="section-{{ forloop.counter }}-collapse">
+                            {{ section.grouper }}
+                        </button>
+                    </h6>
+                    <div id="section-{{ forloop.counter }}-collapse" class="accordion-collapse collapse{% if current_term|lower in section.grouper|lower %} show{% endif %}"
+                         data-bs-parent="#internships-accordion">
+                        <div class="accordion-body">
+                            {% for internship in section.list %}
+                                <div class="btn-group btn-group-lg d-flex justify-content-end bg-dark" role="group">
+                                    {% define_if internship_id|addstr:' == '|addstr:internship.id 'warning' 'light' as icon_color %}
+                                    {% get_json_content 'internship' '{"internship_id": "'|addstr:internship.id|addstr:'"}' as json_content %}
+                                    {% include 'core/buttons/load_regions.html' with btn_color='dark update-selected' icon='person-workspace' json_stage=False json_profile=False json_toc=False json_title=False json_url=False perms=True post_icon=False text=internship.intern text_css='ps-3' title=internship.intern size='1.5rem' %}
+                                    {% include 'internship/journal/options/options.html' with from_toc=True %}
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            {% empty %}
+                {% include 'core/helpers/alert.html' with alert_css='m-0' icon='info-square' text_css='ps-3' text='No internships here! Use the Add (+) button above to add an internship.' type='info' %}
+            {% endfor %}
+        </div>
+    </li>
+{% endif %}

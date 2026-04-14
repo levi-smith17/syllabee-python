@@ -1,0 +1,6 @@
+{% load core_extras %}
+<div class="btn-group btn-group-lg d-flex justify-content-end bg-{% if from_toc %}dark{% else %}warning rounded-0 position-sticky top-0 z-200 border-bottom border-dark{% endif %}"
+     role="group">
+    {% url 'internship:journal:create' as url %}
+    {% include 'editor/helpers/buttons/offcanvas_modal.html' with btn_color='dark' control='offcanvas' full=False icon='plus-lg' icon_color='' next=False perm=True text='' text_css='' title='Add Internship' %}
+</div>

@@ -1,0 +1,35 @@
+{% load core_extras %}
+<div class="btn-group btn-group-lg d-flex flex-column m-0 text-bg-dark-header rounded-0">
+    {% define_if location.validated 'check-circle' 'ban' as icon %}
+    {% define_if location.validated 'success' 'danger' as icon_color %}
+    {% if user|has_group:'admins' or user|has_group:'instructors' %}
+        {% define_if location.validated 'Invalidate Location' 'Validate Location' as title %}
+        {% url 'internship:journal:location:validate' internship.id location.id as url %}
+        {% include 'editor/helpers/buttons/offcanvas_modal.html' with btn_color='dark btn-darker flex-grow-0 p-2' control='modal' full=False next=False perm=True text='' text_css='' %}
+    {% else %}
+        <div class="opacity-50 p-2 text-{{ icon_color }}" title="Validation Status">{% include 'core/helpers/icon.html' with size='1.5rem' %}</div>
+    {% endif %}
+    <a href="https://www.google.com/maps/place/{{ location.address_1|mapify }}+{{ location.address_2|mapify }}+{{ location.city|mapify }}+{{ location.state|mapify }}+{{ location.zip }}"
+       class="btn btn-dark btn-darker flex-grow-0 p-2" target="_blank" title="Show Location on a Map">
+        {% include 'core/helpers/icon.html' with icon='geo-alt' size='1.5rem' %}
+    </a>
+    <a href="mailto:{{ location.supervisor_email }}" class="btn btn-dark btn-darker flex-grow-0 p-2"
+       title="Email {{ location.supervisor_first_name }} {{ location.supervisor_last_name }}">
+        {% include 'core/helpers/icon.html' with icon='envelope-at' size='1.5rem' %}
+    </a>
+    {% if location.supervisor_phone %}
+        <a href="tel:{{ location.supervisor_phone }}" class="btn btn-dark btn-darker flex-grow-0 p-2"
+           title="Call {{ location.supervisor_first_name }} {{ location.supervisor_last_name }}">
+            {% include 'core/helpers/icon.html' with icon='telephone' size='1.5rem' %}
+        </a>
+    {% endif %}
+    {% define_if location.validated True False as perm %}
+    {% define_if location.validated '' 'warning' as icon_color %}
+    {% url 'internship:journal:location:entry:create' internship.id location.id as url %}
+    {% include 'editor/helpers/buttons/offcanvas_modal.html' with btn_color='dark btn-darker flex-grow-0 p-2' control='offcanvas' full=True icon='plus-lg' next=False text='' text_css='' title='Add Journal Entry' %}
+    {% if user|has_group:'admins' or user|has_group:'instructors' %}
+        {% url 'internship:journal:location:verify' internship.id location.id as url %}
+        {% include 'editor/helpers/buttons/offcanvas_modal.html' with btn_color='dark btn-darker flex-grow-0 p-2' control='modal' icon='journal-check' full=False next=False text='' text_css='' title='Verify All Entries' %}
+        {% include 'internship/journal/location/options/manage.html' %}
+    {% endif %}
+</div>

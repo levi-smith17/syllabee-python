@@ -1,0 +1,14 @@
+{% load core_extras json_loaders %}
+<div class="btn-group btn-group-lg d-flex flex-column text-bg-warning rounded-0">
+    {% if user|has_group:'admins' or user|has_group:'instructors' %}
+        {% define_if entry.verified 'check-circle' 'ban' as icon %}
+        {% define_if entry.verified 'success' 'danger' as icon_color %}
+        {% define_if entry.verified 'Unverify Journal Entry' 'Verify Journal Entry' as title %}
+        {% url 'internship:journal:location:entry:verify' internship.id location.id entry.id as url %}
+        {% include 'editor/helpers/buttons/offcanvas_modal.html' with btn_color='warning flex-grow-0 p-2' control='modal' full=False next=False perm=True text='' text_css='' %}
+    {% endif %}
+    {% url 'internship:journal:location:entry:update' internship.id location.id entry.id as url %}
+    {% include 'editor/helpers/buttons/offcanvas_modal.html' with btn_color='warning flex-grow-0 m-0 rounded-0 p-2' control='offcanvas' full=True icon='pencil' icon_color='' next=False perm=True text='' text_css='' title='Edit Journal Entry' %}
+    {% url 'internship:journal:location:entry:delete' internship.id location.id entry.id as url %}
+    {% include 'editor/helpers/buttons/offcanvas_modal.html' with btn_color='warning flex-grow-0 m-0 rounded-0 p-2' control='modal' full=False icon='x-lg' icon_color='danger' next=False perm=True text='' text_css='' title='Delete Journal Entry' %}
+</div>

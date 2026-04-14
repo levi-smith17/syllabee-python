@@ -1,0 +1,15 @@
+<div class="btn-group flex-column m-0 dropend">
+    {% include 'editor/helpers/buttons/dropdown_toggle.html' with auto_close='true' btn_color='dark btn-darker border-0 m-0 p-2' icon='three-dots' icon_color='' perm=True text='' text_css='' title='Manage Location' %}
+    <ul class="dropdown-menu dropdown-menu-dark dropdown-menu-end shadow-lg">
+        <li><h6 class="dropdown-header">Manage Location</h6></li>
+        <li>
+            {% url 'internship:journal:location:update' internship.id location.id as url %}
+            {% include 'editor/helpers/buttons/dropdown.html' with control='offcanvas' full=False icon='pencil' icon_color='' next=False perm=True text='Edit' title='Edit Location' %}
+        </li>
+        <li><hr class="dropdown-divider"></li>
+        <li>
+            {% url 'internship:journal:location:delete' internship.id location.id as url %}
+            {% include 'editor/helpers/buttons/dropdown.html' with control='modal' full=False icon='trash3' icon_color='danger' next=False text='Delete (Forever)' title='Delete Location (Forever)' %}
+        </li>
+    </ul>
+</div>

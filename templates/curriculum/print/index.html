@@ -1,0 +1,19 @@
+{% extends 'core/base.html' %}
+{% load static core_extras viewer_extras %}
+{% block title %}{{ title }}{% endblock %}
+
+{% block css %}
+    <link rel="stylesheet" type="text/css" href="{% static 'curriculum/styles.scss' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'curriculum/print.scss' %}" media="print">
+{% endblock %}
+
+{% block main %}
+    <!-- Container -->
+    {% include 'curriculum/program/card/table.html' with print=True %}
+    <!-- END Container -->
+
+    <script type="text/javascript">
+        window.onafterprint = window.close;
+        window.print();
+    </script>
+{% endblock %}

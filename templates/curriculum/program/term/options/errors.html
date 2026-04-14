@@ -1,0 +1,18 @@
+{% load core_extras curriculum_extras %}
+{% verify_term term as all_valid %}
+{% verify_unique_terms term as valid_unique %}
+<div class="btn-group w-100">
+    {% define_if all_valid 'check-circle' 'exclamation-circle' as icon %}
+    {% define_if all_valid 'success' 'danger' as icon_color %}
+    {% include 'editor/helpers/buttons/dropdown_toggle.html' with auto_close='true' btn_color='dark rounded-0 p-2 py-1 justify-content-center' perm=all_valid|negate text='' text_css='' title='Term Status' %}
+    <ul class="dropdown-menu dropdown-menu-dark dropdown-menu-end shadow-lg">
+        <li><h6 class="dropdown-header">Term Error(s)</h6></li>
+        <li>
+            <div class="d-grid px-2 gap-2">
+                {% if not valid_unique %}
+                    {% include 'core/helpers/alert.html' with alert_css='m-0' icon='x-square' text_css='ps-3' text='Duplicate Term' type='danger' %}
+                {% endif %}
+            </div>
+        </li>
+    </ul>
+</div>

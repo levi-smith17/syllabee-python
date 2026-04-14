@@ -1,0 +1,39 @@
+<div class="btn-group w-100">
+    {% include 'editor/helpers/buttons/dropdown_toggle.html' with auto_close='true' btn_color='dark rounded-0 p-2 py-1 justify-content-center' icon='three-dots' icon_color='' perm=True text='' text_css='' title='Manage Course' %}
+    <ul class="dropdown-menu dropdown-menu-dark dropdown-menu-end shadow-lg">
+        <li><h6 class="dropdown-header">Manage Course</h6></li>
+        {% if sub %}
+            <li>
+                {% url 'curriculum:program:term:course:extension:detail' program.id term.id course.id as url %}
+                {% include 'editor/helpers/buttons/dropdown.html' with control='offcanvas' full=True icon='plus-lg' icon_color='' next=False text='Sub Courses' title='Add Course to Row' %}
+            </li>
+            <li>
+                {% url 'editor:registration:course:rename' course.course.id program.id as url %}
+                {% include 'editor/helpers/buttons/dropdown.html' with control='offcanvas' full=False icon='repeat' icon_color='' next=False text='Rename' title='Rename Course' %}
+            </li>
+            <li>
+                {% url 'curriculum:program:term:course:update' program.id term.id course.id as url %}
+                {% include 'editor/helpers/buttons/dropdown.html' with control='offcanvas' full=False icon='pencil' icon_color='' next=False text='Edit' title='Edit Course' %}
+            </li>
+            <li><hr class="dropdown-divider"></li>
+            <li>
+                {% url 'curriculum:program:term:course:delete' program.id term.id course.id as url %}
+                {% include 'editor/helpers/buttons/dropdown.html' with control='modal' full=False icon='trash3' icon_color='danger' next=False text='Delete (Forever)' title='Delete Course (Forever)' %}
+            </li>
+        {% else %}
+            <li>
+                {% url 'editor:registration:course:rename' extension.course.id program.id as url %}
+                {% include 'editor/helpers/buttons/dropdown.html' with control='offcanvas' full=False icon='repeat' icon_color='' next=False text='Rename' title='Rename Course' %}
+            </li>
+            <li>
+                {% url 'curriculum:program:term:course:extension:update' program.id term.id course.id extension.id as url %}
+                {% include 'editor/helpers/buttons/dropdown.html' with control='offcanvas' full=False icon='pencil' icon_color='' next=False text='Edit' title='Edit Course' %}
+            </li>
+            <li><hr class="dropdown-divider"></li>
+            <li>
+                {% url 'curriculum:program:term:course:extension:delete' program.id term.id course.id extension.id as url %}
+                {% include 'editor/helpers/buttons/dropdown.html' with control='modal' full=False icon='trash3' icon_color='danger' next=False text='Delete (Forever)' title='Delete Course (Forever)' %}
+            </li>
+        {% endif %}
+    </ul>
+</div>

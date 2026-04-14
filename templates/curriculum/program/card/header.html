@@ -1,0 +1,40 @@
+<thead>
+<tr class="details">
+    <th colspan="{% if print %}2{% else %}3{% endif %}" class="text-center align-bottom px-1 py-0">{{ branding.institution }}</th>
+    <th colspan="{% if print %}5{% else %}6{% endif %}" class="text-center align-bottom px-1 py-0">{{ program.owner.first_name }} {{ program.owner.last_name }}</th>
+</tr>
+<tr class="details">
+    <th colspan="{% if print %}2{% else %}3{% endif %}" class="text-center align-top no-top px-1 py-0">Institution/Campus</th>
+    <th colspan="{% if print %}5{% else %}6{% endif %}" class="text-center align-top no-top px-1 py-0">Faculty</th>
+</tr>
+<tr class="details">
+    <th colspan="{% if print %}7{% else %}9{% endif %}" class="no-top px-1 py-0">&nbsp;</th>
+</tr>
+<tr class="details">
+    <th colspan="{% if print %}2{% else %}3{% endif %}" class="text-center align-bottom no-top px-1 py-0">{{ program.name }} - {{ program.option_name }}</th>
+    <th colspan="{% if print %}5{% else %}6{% endif %}" class="text-center align-bottom no-top px-1 py-0">{{ current_date }}</th>
+</tr>
+<tr class="details">
+    <th colspan="{% if print %}2{% else %}3{% endif %}" class="text-center align-top px-1 py-0">{{ program.type }} Program</th>
+    <th colspan="{% if print %}5{% else %}6{% endif %}" class="text-center align-top px-1 py-0">Date</th>
+</tr>
+<tr class="divider">
+    <th colspan="{% if print %}7{% else %}9{% endif %}" class="px-1 py-0">&nbsp;</th>
+</tr>
+<tr class="header">
+    <th colspan="{% if print %}2{% else %}3{% endif %}">&nbsp;</th>
+    <th colspan="2" class="text-center px-1 py-0">Clock Hours</th>
+    <th colspan="{{ credit_types|length }}" class="text-center px-1 py-0">Credit Hours</th>
+    {% if not print %}<th rowspan="2" class="text-center">&nbsp;</th>{% endif %}
+</tr>
+<tr>
+    {% if not print %}<th>&nbsp;</th>{% endif %}
+    <th class="text-center align-bottom px-1 py-0">Course No.</th>
+    <th class="text-center align-bottom px-1 py-0">Course Title</th>
+    <th class="text-center align-bottom px-1 py-0">Class</th>
+    <th class="text-center align-bottom px-1 py-0">Lab</th>
+    {% for credit_type in credit_types %}
+        <th class="text-center align-bottom px-1 py-0">{{ credit_type|safe }}</th>
+    {% endfor %}
+</tr>
+</thead>

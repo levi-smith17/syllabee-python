@@ -1,0 +1,37 @@
+{% load core_extras curriculum_extras %}
+<tr class="course{% if extension %} extension{% endif %}">
+    {% get_next_extension_operator extensions forloop.counter0 as next_operator %}
+    {% if not print %}<td class="text-center align-middle p-0">{% if extension %}&nbsp;{% else %}{% include 'curriculum/program/term/course/options/manage.html' with sub=True %}{% endif %}</td>{% endif %}
+    <td class="align-middle px-1 py-0{% if extension %} extension{% endif %}">{% if extension %}&nbsp;&nbsp;{% endif %}{% if course.course.prefix != 'ZZZ' %}{{ course.course.prefix }} {{ course.course.number }}{% if extensions %} <strong>{% if extension %}{{ next_operator }}{% else %}{{ extensions.0.operator }}{% endif %}</strong>{% endif %}{% endif %}</td>
+    <td class="align-middle px-1 py-0{% if extension %} extension{% endif %}">{% if extension %}&nbsp;&nbsp;{% endif %}{% if course.course.future_name %}{{ course.course.future_name }}{% else %}{{ course.course.name }}{% endif %}{% for footnote_key, footnote_value in footnotes.items %}{% if course.footnote == footnote_value %}<sup>{{ footnote_key }}</sup>{% endif %}{% endfor %}{% if extensions %} <strong>{% if extension %}{% if not forloop.last %}{{ next_operator }}{% endif %}{% else %}{{ extensions.0.operator }}{% endif %}</strong>{% endif %}</td>
+    <td class="text-center align-middle px-1 py-0{% if extension and course.operator == 'AND' %} extension{% endif %}">{% get_course_clock_hours 'class' course as hours %}{% if hours != 0 %}{{ hours|floatformat }}{% endif %}</td>
+    <td class="text-center align-middle px-1 py-0{% if extension and course.operator == 'AND' %} extension{% endif %}">{% get_course_clock_hours 'lab' course as hours %}{% if hours != 0 %}{{ hours|floatformat }}{% endif %}</td>
+    {% for credit_type in credit_types %}
+        <td class="text-center align-middle px-1 py-0{% if extension and course.operator == 'AND' %} extension{% endif %}">{% if credit_type == course.credit_hour_type %}{{ course.course.total_credit_hours|floatformat }}{% endif %}</td>
+    {% endfor %}
+    {% if not print %}
+        <td class="text-center align-middle p-0">
+            {% verify_course course.term course.course as all_valid %}
+            {% verify_requisite course.term course.course as valid_requisites %}
+            {% verify_unique_courses course.term course.course as valid_unique %}
+            <div class="btn-group w-100">
+                {% define_if all_valid 'check-circle' 'exclamation-circle' as icon %}
+                {% define_if all_valid 'success' 'danger' as icon_color %}
+                {% include 'editor/helpers/buttons/dropdown_toggle.html' with auto_close='true' btn_color='dark rounded-0 p-2 py-1 justify-content-center' perm=all_valid|negate text='' text_css='' title='Course Status' %}
+                <ul class="dropdown-menu dropdown-menu-dark dropdown-menu-end shadow-lg">
+                    <li><h6 class="dropdown-header">Course Error(s)</h6></li>
+                    <li>
+                        <div class="d-grid px-2 gap-2">
+                            {% if not valid_requisites %}
+                                {% include 'core/helpers/alert.html' with alert_css='m-0' icon='x-square' text_css='ps-3' text='Requisite Error' type='danger' %}
+                            {% endif %}
+                            {% if not valid_unique %}
+                                {% include 'core/helpers/alert.html' with alert_css='m-0' icon='x-square' text_css='ps-3' text='Duplicate Course' type='danger' %}
+                            {% endif %}
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </td>
+    {% endif %}
+</tr>

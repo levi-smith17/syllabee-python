@@ -1,0 +1,18 @@
+{% load core_extras curriculum_extras json_loaders %}
+<div id="content-container-data" class="d-none"
+        {% if program %} data-content-missing-json="{% get_json_content 'curriculum' '{"program_id": "'|addstr:program.id|addstr:'"}' %}"
+     data-content-json="{% get_json_content 'curriculum' '{"program_id": "'|addstr:program.id|addstr:'"}' %}"{% endif %}></div>
+{% if program %}
+    {% include 'curriculum/program/options/options.html' with from_toc=False %}
+    <div class="p-3">
+        <div id="program-{{ program.id }}" class="card border-0 rounded-0 shadow-lg text-bg-dark w-100">
+            <div class="card-body text-bg-dark h3-border-dark p-5">
+                {% include 'curriculum/program/card/table.html' with print=False %}
+            </div>
+        </div>
+    </div>
+{% elif error %}
+    {% include 'core/helpers/alert.html' with alert_css='m-3' icon='x-square' text_css='ps-3' text='ERROR: '|addstr:error type='danger' %}
+{% else %}
+    {% include 'core/helpers/alert.html' with alert_css='m-3' icon='info-square' text_css='ps-3' text='No program selected! Please select a program from the table of contents.' type='info' %}
+{% endif %}

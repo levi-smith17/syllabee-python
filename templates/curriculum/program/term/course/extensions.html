@@ -1,0 +1,41 @@
+<div class="btn-group btn-group-lg d-flex justify-content-end text-bg-secondary rounded-0">
+    <div class="btn-group btn-group-lg d-flex justify-content-end bg-dark" role="group">
+        <div class="btn-group">
+            {% url 'curriculum:program:term:course:extension:create' program.id term.id course.id as url %}
+            {% include 'editor/helpers/buttons/offcanvas_modal.html' with btn_color='secondary rounded-0' control='offcanvas' full=False icon='plus-lg' icon_color='light' next=False perm=True text='' text_css='' title='Add Course' %}
+        </div>
+    </div>
+</div>
+<div class="p-3">
+    <table class="table table-dark table-bordered table-hover">
+        <thead>
+            <tr>
+                <th class="text-center align-middle p-0 w-4r">&nbsp;</th>
+                <th>Course</th>
+                <th>Credit Hour Type</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td class="text-center align-middle p-0 w-4r">&nbsp;</td>
+                <td class="align-middle px-2 py-1">{{ course.course.course_code }} - {% if course.course.future_name %}{{ course.course.future_name }}{% else %}{{ course.course.name }}{% endif %}</td>
+                <td class="align-middle px-2 py-1">{{ course.credit_hour_type }}</td>
+            </tr>
+        {% for extension in extensions %}
+            <tr>
+                <td>&nbsp;</td>
+                <td colspan="2" class="align-middle fw-bold">{{ extension.operator }}</td>
+            </tr>
+            <tr>
+                <td class="text-center align-middle p-0 w-4r">
+                    {% include 'curriculum/program/term/course/options/manage.html' with sub=False %}
+                </td>
+                <td class="align-middle px-2 py-1">{{ extension.course.course_code }} - {% if extension.course.future_name %}{{ extension.course.future_name }}{% else %}{{ extension.course.name }}{% endif %}</td>
+                <td class="align-middle px-2 py-1">{{ extension.credit_hour_type }}</td>
+            </tr>
+        {% empty %}
+            <tr><td colspan="3">{% include 'core/helpers/alert.html' with alert_css='m-0' icon='info-square' text_css='ps-3' text='No additional courses here! Use the Add (+) button above to add a course to this row.' type='info' %}</td></tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>

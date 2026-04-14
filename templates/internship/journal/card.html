@@ -1,0 +1,22 @@
+{% load core_extras internship_extras json_loaders %}
+<div id="content-container-data" class="d-none"
+        {% if internship %} data-content-json="{% get_json_content 'internship' '{"internship_id": "'|addstr:internship.id|addstr:'"}' %}"{% endif %}></div>
+{% if internship %}
+    {% include 'internship/journal/options/options.html' with from_toc=False %}
+    <div id="internship-{{ internship.id }}" class="card border-0 d-grid gap-3 p-3 rounded-0 text-bg-dark">
+        {% if user|has_group:'interns' %}
+            {% include 'core/helpers/alert.html' with alert_css='m-0' icon='info-square' text_css='ps-3' text='Note: all documented journal entries are subject to verification by the internship supervisor and the internship coordinator.' type='info' %}
+        {% endif %}
+        {% for location in locations %}
+            {% include 'internship/journal/location/card.html' %}
+        {% empty %}
+            {% if user|has_group:'admins' or user|has_group:'instructors' %}
+                {% include 'core/helpers/alert.html' with alert_css='m-0' icon='info-square' text_css='ps-3' text='No internship sites have been added yet! Please use the plus button above to add an internship site.' type='info' %}
+            {% else %}
+                {% include 'core/helpers/alert.html' with alert_css='m-0' icon='info-square' text_css='ps-3' text='<strong>Welcome to your internship journal</strong>! Before you can begin documenting your internship activities, you must follow these steps: <ol><li>Add an internship site using the plus button above.</li><li>Contact your internship coordinator (instructor) and have them validate your internship site.</li><li>Once validated, you can begin logging your journal activities using the plus button to the left of a location below.</li></ol>If at any point in time you have questions or need help, do not hesitate to reach out to your internship coordinator.' type='info' %}
+            {% endif %}
+        {% endfor %}
+    </div>
+{% else %}
+    {% include 'core/helpers/alert.html' with alert_css='m-3' icon='info-square' text_css='ps-3' text='No internships selected. Please select an internship on the right.' type='info' %}
+{% endif %}

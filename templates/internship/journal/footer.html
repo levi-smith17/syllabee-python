@@ -1,0 +1,41 @@
+{% load core_extras internship_extras %}
+{% get_total_time internship.id location_id False as total_time %}
+{% get_total_internship_points internship as total_points %}
+<div class="{% if location_id %}card-footer {% endif %}text-bg-{% if location_id %}secondary{% else %}{% if user|has_group:'admins' or user|has_group:'instructors' %}warning{% else %}info{% endif %} p-2 d-flex justify-content-between{% endif %} rounded-0">
+    <div class="px-1">
+        Total Verified Time{% if location_id %} at {{ location.name }}{% endif %}:
+        <strong>
+            {% for time in total_time %}
+                {% if forloop.counter == 1 %}
+                    {{ time }} hour{{ time|plural }},
+                {% else %}
+                    {{ time }} minute{{ time|plural }}
+                {% endif %}
+            {% empty %}
+                0 hours, 0 minutes
+            {% endfor %}
+        </strong>
+        {% if not location_id %}(Points: <strong>{{ total_points.0 }}</strong> / {{ total_points.1 }}){% endif %}
+    </div>
+    {% if not location_id %}
+        {% get_total_time internship.id location_id True as remaining_time %}
+        <div class="px-1 d-flex align-items-center">
+            Remaining Time:&nbsp;
+            <strong class="d-flex align-items-center">
+                {% if remaining_time.0 >= 0 %}
+                    {% for time in remaining_time %}
+                        {% if forloop.counter == 1 %}
+                            {{ time }} hour{{ time|plural }},
+                        {% else %}
+                            {{ time }} minute{{ time|plural }}
+                        {% endif %}
+                    {% empty %}
+                        0 hours, 0 minutes
+                    {% endfor %}
+                {% else %}
+                    None!&nbsp;{% include 'core/helpers/icon.html' with icon='hand-thumbs-up' size='1.5rem' %}
+                {% endif %}
+            </strong>
+        </div>
+    {% endif %}
+</div>

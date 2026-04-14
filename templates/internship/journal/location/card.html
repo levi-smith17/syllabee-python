@@ -1,0 +1,13 @@
+<div class="d-flex shadow-lg">
+    {% include 'internship/journal/location/options/options.html' %}
+    <div class="card bg-dark shadow-lg border-0 rounded-0 w-100">
+        <h3 class="card-header border-0 rounded-0 pt-5 px-5">Business: {{ location.name }}</h3>
+        <h4 class="card-header border-0 rounded-0 pt-0 px-5 pb-5">Supervisor: {{ location.supervisor_first_name }} {{ location.supervisor_last_name }}</h4>
+        <div class="card-body border-top border-secondary p-0">
+            <div class="accordion accordion-flush" id="location-{{ location.id }}-accordion">
+                {% include 'internship/journal/location/entry/card.html' %}
+            </div>
+        </div>
+        {% include 'internship/journal/footer.html' with location_id=location.id %}
+    </div>
+</div>

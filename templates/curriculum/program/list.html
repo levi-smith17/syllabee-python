@@ -1,0 +1,16 @@
+{% load core_extras json_loaders %}
+{% for program in programs %}
+    {% ifchanged program.type %}
+        <p class="fw-bold m-0 p-2">{{ program.type }}</p>
+    {% endifchanged %}
+    <div id="program-{{ program.id }}-toc" class="d-grid w-100">
+        <div class="d-flex gap-2 align-items-center p-1">
+            {% define_if program_id|addstr:' == '|addstr:program.id 'warning' 'light' as icon_color %}
+            {% get_json_content 'curriculum' '{"program_id": "'|addstr:program.id|addstr:'"}' as json_content %}
+            {% include 'core/buttons/load_regions.html' with btn_color='dark update-selected flex-fill' icon='file-spreadsheet' json_stage=False json_profile=False json_toc=False json_title=False json_url=False perms=True post_icon=False text=program text_css='ps-3' title=program size='1.5rem' %}
+            {% include 'curriculum/program/options/options.html' with from_toc=True %}
+        </div>
+    </div>
+{% empty %}
+    {% include 'core/helpers/alert.html' with alert_css='m-0' icon='info-square' text_css='ps-3' text='No programs here! Use the Add (+) button above to create a program.' type='info' %}
+{% endfor %}

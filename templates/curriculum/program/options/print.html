@@ -1,0 +1,8 @@
+<div class="btn-group btn-group-lg d-flex justify-content-end bg-dark" role="group">
+    <div class="btn-group">
+        <a href="{% url 'curriculum:program:print' program.id %}" target="_blank"
+           class="btn btn-lg btn-secondary rounded-0" title="Print Program">
+            {% include 'core/buttons/content.html' with icon='printer' icon_color='' text='' text_css='' size='1.5rem' %}
+        </a>
+    </div>
+</div>

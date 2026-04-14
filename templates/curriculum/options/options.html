@@ -1,0 +1,6 @@
+<div class="btn-group btn-group-lg d-flex justify-content-end bg-dark" role="group">
+    <div class="btn-group">
+        {% url 'curriculum:program:create' as url %}
+        {% include 'editor/helpers/buttons/offcanvas_modal.html' with btn_color='dark' control='offcanvas' full=False icon='plus-lg' icon_color='light' next=False perm=True text='' text_css='' title='Create Program' %}
+    </div>
+</div>

@@ -1,0 +1,8 @@
+{% load core_extras json_loaders %}
+{% if user|has_group:'instructors' %}
+    {% get_json_content 'curriculum' '' as json_content %}
+    {% get_json_profile '{"instructor_id": "'|addstr:user.id|addstr:'"}' as json_profile %}
+    {% get_json_toc 'curriculum' '' as json_toc %}
+    {% url 'curriculum:index' as json_url %}
+    {% include 'core/buttons/load_regions.html' with btn_color='dark btn-darker justify-content-center border-0 h-4r w-4r' icon='book' icon_color='' json_stage=False json_title='Curriculum Builder' perms=True post_icon=False text='' text_css='' title='Curriculum Builder' size='2rem' %}
+{% endif %}
